@@ -7,7 +7,7 @@
 
 int main(int argc, char* argv[])
 {
-    size_t size = 5;
+    int size = 5;
 
     //Pos agentPos(gridH - 1, 0);
     //Pos wumpusPos(1, 0);
@@ -53,18 +53,27 @@ int main(int argc, char* argv[])
 
     Grid grid(renderer, size);
 
-    while(running)
+    // keep redrawing everything
+    while (running)
     {
         while (SDL_PollEvent(&event) != 0)
         {
-            if (event.type == SDL_QUIT)
+            if (event.type == SDL_QUIT) // x clicked
             {
-                running = false; 
+                running = false;
+            }
+            else if (event.type == SDL_MOUSEBUTTONDOWN) // mouse click
+            {
+                if (event.button.clicks == 2) // check if it was a double click
+                {
+                    Point p = { event.button.x, event.button.y };
+                    grid.selectSquare(p);
+                }
             }
         }
-        
+
         // clear
-        SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
+        SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE); // set background color to black
         SDL_RenderClear(renderer);
 
         // draw
