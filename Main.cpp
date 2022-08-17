@@ -1,113 +1,81 @@
-//#include "Model/Solver.hpp"
-//
-//// height = row, width = col
-//
-//int main()
-//{
-//    size_t gridH = 4;
-//    size_t gridW = 4;
-//
-//    Pos agentPos(gridH - 1, 0);
-//    Pos wumpusPos(1, 0);
-//    Pos goldPos(1, 1);
-//    std::vector<Pos> pitPos = {{0, 3}, {1, 2}, {3, 2}};
-//    try
-//    {
-//        WumpusWorld world(gridH, gridW, agentPos, wumpusPos, goldPos, pitPos);
-//        Solver s(world);
-//        s.solve(agentPos);
-//    }
-//    catch (const std::exception &e)
-//    {
-//        std::cerr << "Invalid object placement" << '\n';
-//    }
-//}
+#include "Model/Solver.hpp"
+#include "View/Grid.hpp"
 
 
 
-#include "SDL.h"
-#undef main
-#include <iostream>
+//NOTE: height = row, width = col
+
+int main(int argc, char* argv[])
+{
+    size_t size = 5;
+
+    //Pos agentPos(gridH - 1, 0);
+    //Pos wumpusPos(1, 0);
+    //Pos goldPos(1, 1);
+    //std::vector<Pos> pitPos = {{0, 3}, {1, 2}, {3, 2}};
+    //try
+    //{
+    //    WumpusWorld world(gridH, gridW, agentPos, wumpusPos, goldPos, pitPos);
+    //    Solver s(world);
+    //    s.solve(agentPos);
+    //}
+    //catch (const std::exception &e)
+    //{
+    //    std::cerr << "Invalid object placement" << '\n';
+    //}
+
+    
+    SDL_Window *window = nullptr;
+    SDL_Renderer* renderer = nullptr;
+
+    SDL_Init(SDL_INIT_VIDEO);
+
+    window = SDL_CreateWindow(
+        "Wumpus-world",
+        SDL_WINDOWPOS_UNDEFINED, 
+        SDL_WINDOWPOS_UNDEFINED, 
+        800,
+        800,
+        SDL_WINDOW_OPENGL
+    );
+
+    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 
 
-//don't do this, this is just an example
-SDL_Renderer* renderer;
-SDL_Window* window;
-bool isRunning;
-bool fullscreen;
-void handleEvents();
-void update();
-void render();
+    // Check that the window was successfully created
+    if (window == NULL) {
+        printf("Could not create window: %s\n", SDL_GetError());
+        return 1;
+    }
 
+    bool running = true;
+    SDL_Event event;
 
-//please don't put all your code in main like I did.
-int main() {
+    Grid grid(renderer, size);
 
-	fullscreen = false;
-	int flags = 0;
-	flags = SDL_WINDOW_RESIZABLE;
-	if (fullscreen) {
-		flags = flags | SDL_WINDOW_FULLSCREEN;
-	}
-	if (SDL_Init(SDL_INIT_EVERYTHING) == 0) {
-		std::cout << "Subsystems Initialized!\n";
+    while(running)
+    {
+        while (SDL_PollEvent(&event) != 0)
+        {
+            if (event.type == SDL_QUIT)
+            {
+                running = false; 
+            }
+        }
+        
+        // clear
+        SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
+        SDL_RenderClear(renderer);
 
-		window = SDL_CreateWindow("Test Window", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 500, 500, flags);
-		if (window) {
-			std::cout << "Window Created!\n";
-			SDL_SetWindowMinimumSize(window, 100, 100);
-		}
-		renderer = SDL_CreateRenderer(window, -1, 0);
-		if (renderer) {
-			SDL_SetRenderDrawColor(renderer, 121, 121, 121, 255);
-			std::cout << "Renderer created!\n";
-			SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
-			isRunning = true;
-		}
+        // draw
+        grid.drawGrid();
 
-	}
+        // show
+        SDL_RenderPresent(renderer);
+    }
 
-	while (isRunning) {
-		handleEvents();
-		update();
-		render();
-	}
+    SDL_DestroyWindow(window);
+    SDL_Quit();
 
-	//frees memory associated with renderer and window
-	SDL_DestroyRenderer(renderer);
-	SDL_DestroyWindow(window);	//error here
-	SDL_Quit();
-
-
-	return 0;
-}
-
-//handles any events that SDL noticed.
-void handleEvents() {
-	//the only event we'll check is the  SDL_QUIT event.
-	SDL_Event event;
-	SDL_PollEvent(&event);
-
-
-	switch (event.type) {
-	case SDL_QUIT:
-		isRunning = false;
-		break;
-	default:
-		break;
-	}
-}
-
-//simple render function
-void render() {
-	SDL_SetRenderDrawColor(renderer, 121, 121, 121, 255);
-	SDL_RenderClear(renderer);
-
-	//your stuff to render would typically go here.
-	SDL_RenderPresent(renderer);
-}
-
-//simple update function
-void update() {
-	//if things could update the code would go in here.
+    return 0;
 }

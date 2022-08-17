@@ -150,12 +150,15 @@
     <ClCompile Include="Model\Pos.cpp" />
     <ClCompile Include="Model\Solver.cpp" />
     <ClCompile Include="Model\WumpusWorld.cpp" />
+    <ClCompile Include="View\Grid.cpp" />
+    <ClCompile Include="View\Point.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Model\KnowledgeBase.hpp" />
     <ClInclude Include="Model\Pos.hpp" />
     <ClInclude Include="Model\Solver.hpp" />
     <ClInclude Include="Model\WumpusWorld.hpp" />
+    <ClInclude Include="View\Grid.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
