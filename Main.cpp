@@ -1,4 +1,5 @@
 #include "View/Grid.hpp"
+#include "View/Button.hpp"
 
 //NOTE: height = row, width = col
 
@@ -38,7 +39,6 @@ int main(int argc, char* argv[])
 
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 
-
     // Check that the window was successfully created
     if (window == NULL) {
         printf("Could not create window: %s\n", SDL_GetError());
@@ -49,6 +49,7 @@ int main(int argc, char* argv[])
     SDL_Event event;
 
     Grid grid(renderer, size);
+    Button buttons(renderer);
 
     // keep redrawing everything
     while (running)
@@ -61,11 +62,14 @@ int main(int argc, char* argv[])
             }
             else if (event.type == SDL_MOUSEBUTTONDOWN) // mouse click
             {
-                if (event.button.clicks == 2) // check if it was a double click
-                {
-                    Point p = { event.button.x, event.button.y };
-                    grid.selectSquare(p);
-                }
+                Point cursorPos = { event.button.x, event.button.y };
+
+                if (buttons.isHelpButtonClicked(cursorPos)) // check if we clicked help
+                    std::cout << "Help clicked" << std::endl;
+                else if (buttons.isPlayButtonClicked(cursorPos)) // check if we clicked play
+                    std::cout << "Play clicked" << std::endl;
+                else if (event.button.clicks == 2) // check if it was a double click
+                    grid.selectSquare(cursorPos);
             }
             else if (event.type == SDL_KEYDOWN)
             {
@@ -80,6 +84,7 @@ int main(int argc, char* argv[])
 
         // draw
         grid.drawGrid();
+        buttons.drawButtons();
 
         // show
         SDL_RenderPresent(renderer);

@@ -54,7 +54,7 @@ void Grid::drawGrid()
 				fillRectangle(curr, squareSize, selectedColor);
 
 			else
-				drawRectangle(curr, squareSize, color);
+				drawRectangle(curr, squareSize, outlineColor);
 
 			row++;
 		}

@@ -150,6 +150,7 @@
     <ClCompile Include="Model\Pos.cpp" />
     <ClCompile Include="Model\Solver.cpp" />
     <ClCompile Include="Model\WumpusWorld.cpp" />
+    <ClCompile Include="View\Button.cpp" />
     <ClCompile Include="View\Grid.cpp" />
     <ClCompile Include="View\Point.hpp" />
   </ItemGroup>
@@ -158,6 +159,7 @@
     <ClInclude Include="Model\Pos.hpp" />
     <ClInclude Include="Model\Solver.hpp" />
     <ClInclude Include="Model\WumpusWorld.hpp" />
+    <ClInclude Include="View\Button.hpp" />
     <ClInclude Include="View\Grid.hpp" />
   </ItemGroup>
   <ItemGroup>

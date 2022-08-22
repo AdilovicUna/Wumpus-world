@@ -16,7 +16,7 @@ private:
 	SDL_Texture* texture = nullptr;
 
 	// colors
-	SDL_Color color = { 200, 200, 200, SDL_ALPHA_OPAQUE }; // light gray
+	SDL_Color outlineColor = { 200, 200, 200, SDL_ALPHA_OPAQUE }; // light gray
 	SDL_Color selectedColor = { 25, 25, 25, SDL_ALPHA_OPAQUE }; // gark gray
 	SDL_Color agentColor = { 255, 255, 255, SDL_ALPHA_OPAQUE }; // white
 	SDL_Color wumpusColor = { 0, 150, 0, SDL_ALPHA_OPAQUE }; // green

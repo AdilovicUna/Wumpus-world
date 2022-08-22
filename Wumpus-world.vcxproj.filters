@@ -36,6 +36,9 @@
     <ClCompile Include="View\Point.hpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="View\Button.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Model\WumpusWorld.hpp">
@@ -51,6 +54,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="View\Grid.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="View\Button.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
