@@ -6,11 +6,11 @@
 class Pos
 {
 private:
-	std::pair<std::size_t, std::size_t> pos;
+	std::pair<int, int> pos;
 
 public:
-	Pos(std::size_t row, std::size_t col);
+	Pos(int, int);
 
-	std::size_t getRow();
-	std::size_t getCol();
+	int getRow();
+	int getCol();
 };

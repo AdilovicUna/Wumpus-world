@@ -160,6 +160,18 @@
     <ClInclude Include="Model\WumpusWorld.hpp" />
     <ClInclude Include="View\Grid.hpp" />
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="View\Images\agent.png" />
+    <Image Include="View\Images\arrow.png" />
+    <Image Include="View\Images\gold.png" />
+    <Image Include="View\Images\pit.png" />
+    <Image Include="View\Images\wumpus.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include=".gitattributes" />
+    <None Include=".gitignore" />
+    <None Include="SDL2.dll" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

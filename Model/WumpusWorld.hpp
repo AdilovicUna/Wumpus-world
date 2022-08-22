@@ -33,21 +33,37 @@ inline std::map<Element, std::string> getElementName = {{agent, "a"}, {gold, "g"
 class WumpusWorld
 {
 private:
-    std::size_t height;
-    std::size_t width;
+    int height;
+    int width;
+
     std::vector<std::vector<std::set<Element>>> grid;
 
     // adds an elem at the pos position to the grid
     void addElement(Pos pos, Element elem);
 
+    // removes an elem at the pos position to the grid
+    void removeElement(Pos pos, Element elem);
+
     // check if cell has any element in object layer
     bool hasObject(const std::set<Element> &cell) const;
 
+
 public:
-    WumpusWorld(std::size_t gridH, std::size_t gridW, Pos agentPos, Pos wumpusPos, Pos goldPos, std::vector<Pos> pitsPos);
+    WumpusWorld(int n);
+
+    void addWumpus(Pos wumpusPos);
+    void addPit(Pos wumpusPos);
+    void addGold(Pos wumpusPos);
+
+    void removeWumpus();
+    void removePit(Pos pitPos);
+    void removeGold();
 
     // gets content of a cell at position pos
     const std::set<Element> &getCell(Pos pos) const;
+
+    // find position of an element
+    Pos findElement(Element elem) const;
 
     // gets all neighbor positions of pos (4 sides, if they are not walls)
     std::vector<Pos> getNeighbors(Pos pos) const;
@@ -55,8 +71,8 @@ public:
     // moves the agent from one position to another
     void moveAgent(Pos prevPos, Pos newPos);
 
-    std::size_t getHeight() const;
-    std::size_t getWidth() const;
+    int getHeight() const;
+    int getWidth() const;
 
     void printGrid() const;
 };

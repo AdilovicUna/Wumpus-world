@@ -1,47 +1,111 @@
 #include "WumpusWorld.hpp"
 
-WumpusWorld::WumpusWorld(std::size_t gridH, std::size_t gridW, Pos agentPos, Pos wumpusPos, Pos goldPos, std::vector<Pos> pitsPos)
-    : height(gridH), width(gridW), grid(gridH, std::vector<std::set<Element>>(gridW, std::set<Element>()))
+WumpusWorld::WumpusWorld(int n)
+    : height(n), width(n), grid(n, std::vector<std::set<Element>>(n, std::set<Element>()))
 {
     // agent can only start at the bottom left corner
-    if (agentPos.getRow() != height - 1 || agentPos.getCol() != 0)
+    Pos agentPos = { n - 1 , 0 };
+    addElement(agentPos, agent);
+}
+
+void WumpusWorld::addWumpus(Pos wumpusPos)
+{
+    if (wumpusPos.getRow() == -1)
     {
-        std::cout << "constructor " << agentPos.getRow() << " " << agentPos.getCol() << std::endl;
-        throw std::exception();
+        return;
     }
 
-    addElement(agentPos, agent);
+    removeWumpus();
     addElement(wumpusPos, wumpus);
+
     // add stench to all wumpus neighbors
-    for (const auto &pos : getNeighbors(wumpusPos))
+    for (const auto& pos : getNeighbors(wumpusPos))
     {
         addElement(pos, stench);
     }
-    addElement(goldPos, gold);
+}
 
-    for (const auto &pitPos : pitsPos)
+void WumpusWorld::addPit(Pos pitPos)
+{
+    if (pitPos.getRow() == -1)
     {
-        addElement(pitPos, pit);
-        // add breeze to all pit neighbors
-        for (const auto &pos : getNeighbors(pitPos))
-        {
-            addElement(pos, breeze);
-        }
+        return;
     }
+
+    addElement(pitPos, pit);
+
+    // add breeze to all pit neighbors
+    for (const auto& pos : getNeighbors(pitPos))
+    {
+        addElement(pos, breeze);
+    }
+}
+
+void WumpusWorld::addGold(Pos goldPos)
+{
+    if (goldPos.getRow() == -1)
+    {
+        return;
+    }
+
+    removeGold();
+    addElement(goldPos, gold);
 }
 
 void WumpusWorld::addElement(Pos pos, Element elem)
 {
-    // if we try to add 2 objects in the same cell or
-    // add an object to the agents starting position
+    // if we try to add more than 1 object at the same pos
     if (getLayer[elem] == object &&
         (hasObject(grid[pos.getRow()][pos.getCol()]) || (pos.getRow() == height - 1 && pos.getCol() == 0)))
 
     {
-        std::cout << "addElem " << pos.getRow() << " " << pos.getCol() << " " << elem << std::endl;
-        throw std::exception();
+        return;
     }
     grid[pos.getRow()][pos.getCol()].insert(elem);
+}
+
+void WumpusWorld::removeWumpus()
+{
+    Pos wumpusPos = findElement(wumpus);
+    if (wumpusPos.getRow() == -1)
+    {
+        return;
+    }
+
+    removeElement(wumpusPos, wumpus);
+
+    // remove stench to all wumpus neighbors
+    for (const auto& pos : getNeighbors(wumpusPos))
+    {
+        removeElement(pos, stench);
+    }
+}
+
+void WumpusWorld::removePit(Pos pitPos)
+{
+    removeElement(pitPos, pit);
+
+    // remove breeze to all pit neighbors
+    for (const auto& pos : getNeighbors(pitPos))
+    {
+        removeElement(pos, breeze);
+    }
+}
+
+void WumpusWorld::removeGold()
+{
+    Pos goldPos = findElement(gold);
+    if (goldPos.getRow() == -1)
+    {
+        return;
+    }
+
+    removeElement(goldPos, gold);
+}
+
+void WumpusWorld::removeElement(Pos pos, Element elem)
+{
+    grid[pos.getRow()][pos.getCol()].erase(elem);
 }
 
 std::vector<Pos> WumpusWorld::getNeighbors(Pos pos) const
@@ -74,6 +138,25 @@ bool WumpusWorld::hasObject(const std::set<Element> &cell) const
     return false;
 }
 
+Pos WumpusWorld::findElement(Element elem) const
+{
+    for (int i = 0; i < height; i++)
+    {
+        for (int j = 0; j < width; j++)
+        {
+            for (const auto& e : getCell(Pos{ i, j }))
+            {
+                if (e == elem)
+                {
+                    Pos p = { i, j };
+                    return p;
+                }
+            }
+        }
+    }
+    return Pos{ -1, -1 };
+}
+
 void WumpusWorld::printGrid() const
 {
     for (const auto &row : grid)
@@ -97,12 +180,12 @@ const std::set<Element> &WumpusWorld::getCell(Pos pos) const
     return grid[pos.getRow()][pos.getCol()];
 }
 
-std::size_t WumpusWorld::getHeight() const
+int WumpusWorld::getHeight() const
 {
     return height;
 }
 
-std::size_t WumpusWorld::getWidth() const
+int WumpusWorld::getWidth() const
 {
     return width;
 }

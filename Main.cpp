@@ -1,7 +1,4 @@
-#include "Model/Solver.hpp"
 #include "View/Grid.hpp"
-
-
 
 //NOTE: height = row, width = col
 
@@ -70,6 +67,11 @@ int main(int argc, char* argv[])
                     grid.selectSquare(p);
                 }
             }
+            else if (event.type == SDL_KEYDOWN)
+            {
+                Point p = { event.button.x, event.button.y };
+                grid.addElement(event.key.keysym.sym, p);
+            }
         }
 
         // clear
@@ -83,7 +85,11 @@ int main(int argc, char* argv[])
         SDL_RenderPresent(renderer);
     }
 
+    // clean
+    grid.clean();
+    SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
+
     SDL_Quit();
 
     return 0;

@@ -54,4 +54,26 @@
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="View\Images\gold.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="View\Images\pit.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="View\Images\wumpus.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="View\Images\agent.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="View\Images\arrow.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include=".gitattributes" />
+    <None Include=".gitignore" />
+    <None Include="SDL2.dll" />
+  </ItemGroup>
 </Project>

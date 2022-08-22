@@ -5,7 +5,6 @@
 class Solver
 {
 private:
-    WumpusWorld world;
     KnowledgeBase KB;
     
     std::vector<Pos> pathTaken;
@@ -26,6 +25,8 @@ private:
     bool isFinished(const std::set<Element> &cell) const;
 
 public:
+    WumpusWorld world;
+
     Solver(WumpusWorld w);
     void solve(Pos agent);
 };
