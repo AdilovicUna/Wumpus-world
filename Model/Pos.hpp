@@ -11,6 +11,6 @@ private:
 public:
 	Pos(int, int);
 
-	int getRow();
-	int getCol();
+	int getRow() const;
+	int getCol() const;
 };

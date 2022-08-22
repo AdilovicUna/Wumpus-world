@@ -16,12 +16,13 @@ void WumpusWorld::addWumpus(Pos wumpusPos)
     }
 
     removeWumpus();
-    addElement(wumpusPos, wumpus);
-
-    // add stench to all wumpus neighbors
-    for (const auto& pos : getNeighbors(wumpusPos))
+    if (addElement(wumpusPos, wumpus))
     {
-        addElement(pos, stench);
+        // add stench to all wumpus neighbors
+        for (const auto& pos : getNeighbors(wumpusPos))
+        {
+            addElement(pos, stench);
+        }
     }
 }
 
@@ -32,12 +33,13 @@ void WumpusWorld::addPit(Pos pitPos)
         return;
     }
 
-    addElement(pitPos, pit);
-
-    // add breeze to all pit neighbors
-    for (const auto& pos : getNeighbors(pitPos))
+    if (addElement(pitPos, pit)) 
     {
-        addElement(pos, breeze);
+        // add breeze to all pit neighbors
+        for (const auto& pos : getNeighbors(pitPos))
+        {
+            addElement(pos, breeze);
+        }
     }
 }
 
@@ -52,16 +54,18 @@ void WumpusWorld::addGold(Pos goldPos)
     addElement(goldPos, gold);
 }
 
-void WumpusWorld::addElement(Pos pos, Element elem)
+bool WumpusWorld::addElement(Pos pos, Element elem)
 {
     // if we try to add more than 1 object at the same pos
     if (getLayer[elem] == object &&
-        (hasObject(grid[pos.getRow()][pos.getCol()]) || (pos.getRow() == height - 1 && pos.getCol() == 0)))
-
+        (hasObject(grid[pos.getRow()][pos.getCol()]) || 
+        (pos.getRow() == height - 1 && pos.getCol() == 0)))
     {
-        return;
+        return false;
     }
     grid[pos.getRow()][pos.getCol()].insert(elem);
+
+    return true;
 }
 
 void WumpusWorld::removeWumpus()
@@ -146,15 +150,34 @@ Pos WumpusWorld::findElement(Element elem) const
         {
             for (const auto& e : getCell(Pos{ i, j }))
             {
-                if (e == elem)
+                if (elem == e)
                 {
-                    Pos p = { i, j };
-                    return p;
+                    return Pos{ i,j };
                 }
             }
         }
     }
     return Pos{ -1, -1 };
+}
+
+std::vector<Pos> WumpusWorld::findMultipleElements(Element elem) const
+{
+    std::vector<Pos> result;
+
+    for (int i = 0; i < height; i++)
+    {
+        for (int j = 0; j < width; j++)
+        {
+            for (const auto& e : getCell(Pos{ i, j }))
+            {
+                if (elem == e)
+                {
+                    result.push_back(Pos{ i,j });
+                }
+            }
+        }
+    }
+    return result;
 }
 
 void WumpusWorld::printGrid() const

@@ -8,9 +8,13 @@ void Grid::drawGrid()
 {
 	int squareSize = boardSize / size;
 	Point curr;
-	Pos agentPos = { size - 1, 0 };
-	Pos wumpusPos = { -1, -1 };
-	Pos goldPos = {-1, -1};
+
+	Pos agentPos = solver.world.findElement(agent);
+	Pos goldPos = solver.world.findElement(gold);
+	Pos wumpusPos = solver.world.findElement(wumpus);
+	std::vector<Pos> stenchPos = solver.world.findMultipleElements(stench);
+	std::vector<Pos> pitsPos = solver.world.findMultipleElements(pit);
+	std::vector<Pos> breezePos = solver.world.findMultipleElements(breeze);
 
 	int row = 0;
 	int col = 0;
@@ -20,22 +24,35 @@ void Grid::drawGrid()
 		for (int j = start.y; j < start.y + (squareSize * size); j += squareSize)
 		{
 			curr = { i, j };
-			agentPos = solver.world.findElement(agent);
-			wumpusPos = solver.world.findElement(wumpus);
-			goldPos = solver.world.findElement(gold);
 
 			// draw agent
 			if (agentPos.getRow() == row && agentPos.getCol() == col)
 				fillRectangle(curr, squareSize, agentColor);
-			// draw wumpus
-			else if (wumpusPos.getRow() == row && wumpusPos.getCol() == col)
-					fillRectangle(curr, squareSize, wumpusColor);
+
 			// draw gold
 			else if (goldPos.getRow() == row && goldPos.getCol() == col)
 				fillRectangle(curr, squareSize, goldColor);
+
+			// draw wumpus
+			else if (wumpusPos.getRow() == row && wumpusPos.getCol() == col)
+				fillRectangle(curr, squareSize, wumpusColor);
+
+			//// draw stenches
+			//else if (goldPos.getRow() == row && goldPos.getCol() == col)
+			//	fillRectangle(curr, squareSize, goldColor);
+			
+			// draw pits
+			else if (checkIfElement(pitsPos, row, col))
+				fillRectangle(curr, squareSize, pitColor);
+
+			//// draw breeezes
+			//else if (goldPos.getRow() == row && goldPos.getCol() == col)
+			//	fillRectangle(curr, squareSize, goldColor);
+			
 			// check if this was the selected rectangle
 			else if (selected.x > i && selected.x < i + squareSize && selected.y > j && selected.y < j + squareSize)
 				fillRectangle(curr, squareSize, selectedColor);
+
 			else
 				drawRectangle(curr, squareSize, color);
 
@@ -43,6 +60,18 @@ void Grid::drawGrid()
 		}
 		col++;
 	}
+}
+
+bool Grid::checkIfElement(const std::vector<Pos> &elements, int row, int col) const
+{
+	for (const auto& elemPos : elements)
+	{
+		if (elemPos.getRow() == row && elemPos.getCol() == col)
+		{
+			return true;
+		}
+	}
+	return false;
 }
 
 void Grid::drawRectangle(Point p, int squareSize, SDL_Color color)
@@ -65,23 +94,17 @@ void Grid::fillRectangle(Point p, int squareSize, SDL_Color color)
 	SDL_RenderFillRect(renderer, &rect);
 }
 
-void Grid::addImage(Point p, int squareSize, std::string &character)
+void Grid::addImage(Point p, int squareSize)
 {
 
 	//image = SDL_LoadBMP("Images/agent.png");
-	/*texture = IMG_LoadTexture(renderer, "Images/" + character + ".png");
+	image = IMG_Load("Images/rand.jpg");
+	texture = SDL_CreateTextureFromSurface(renderer, image);
 
 	SDL_Rect rect = { p.x, p.y, squareSize, squareSize };
-	SDL_RenderCopy(renderer, texture, NULL, &rect);*/
-
-	SDL_Color color = { 25, 0, 150, SDL_ALPHA_OPAQUE }; // purple cherry
-
-	if (character == "agent")
-	{
-		color = { 150, 150, 150 };
-	}
-	
-	fillRectangle(p, squareSize, color);
+	SDL_RenderClear(renderer);
+	SDL_RenderCopy(renderer, texture, NULL, &rect);
+	SDL_RenderPresent(renderer);
 }
 
 void Grid::selectSquare(Point p)
@@ -110,7 +133,11 @@ void Grid::addElement(SDL_Keycode key, Point p)
 	}
 	else if (key == SDLK_p)
 	{
-
+		std::set<Element> cellContent = solver.world.getCell(cell);
+		if (cellContent.find(pit) == cellContent.end())
+			solver.world.addPit(cell);
+		else
+			solver.world.removePit(cell);
 	}
 	solver.world.printGrid();
 }

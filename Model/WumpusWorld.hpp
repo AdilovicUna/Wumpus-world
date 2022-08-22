@@ -39,7 +39,9 @@ private:
     std::vector<std::vector<std::set<Element>>> grid;
 
     // adds an elem at the pos position to the grid
-    void addElement(Pos pos, Element elem);
+    // returns false if the element was not added
+    // otherwise true
+    bool addElement(Pos pos, Element elem);
 
     // removes an elem at the pos position to the grid
     void removeElement(Pos pos, Element elem);
@@ -62,8 +64,11 @@ public:
     // gets content of a cell at position pos
     const std::set<Element> &getCell(Pos pos) const;
 
-    // find position of an element
+    // find position of an elem
     Pos findElement(Element elem) const;
+
+    // find position of all elem
+    std::vector<Pos> findMultipleElements(Element elem) const;
 
     // gets all neighbor positions of pos (4 sides, if they are not walls)
     std::vector<Pos> getNeighbors(Pos pos) const;

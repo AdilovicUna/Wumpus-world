@@ -70,10 +70,14 @@
     <Image Include="View\Images\arrow.png">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="View\Images\rand.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitattributes" />
     <None Include=".gitignore" />
     <None Include="SDL2.dll" />
+    <None Include="..\..\..\Downloads\SDL2_image-2.0.2\lib\x64\.dll" />
   </ItemGroup>
 </Project>

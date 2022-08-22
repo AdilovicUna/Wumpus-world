@@ -4,7 +4,7 @@
 #include "Point.hpp"
 #include "SDL.h"
 #include <stdio.h>
-#include <SDL2/SDL_image.h>
+#include "SDL_image.h"
 #include <string>
 
 class Grid
@@ -20,7 +20,8 @@ private:
 	SDL_Color selectedColor = { 25, 25, 25, SDL_ALPHA_OPAQUE }; // gark gray
 	SDL_Color agentColor = { 255, 255, 255, SDL_ALPHA_OPAQUE }; // white
 	SDL_Color wumpusColor = { 0, 150, 0, SDL_ALPHA_OPAQUE }; // green
-	SDL_Color goldColor = { 150, 150, 0, SDL_ALPHA_OPAQUE }; // yellow
+	SDL_Color goldColor = { 180, 150, 0, SDL_ALPHA_OPAQUE }; // yellow
+	SDL_Color pitColor = { 120, 0, 150, SDL_ALPHA_OPAQUE }; // cherry
 
 	// starting position and size of the grid
 	Point start = { 150, 150 };
@@ -31,7 +32,10 @@ private:
 
 	void drawRectangle(Point p, int squareSize, SDL_Color color);
 	void fillRectangle(Point p, int squareSize, SDL_Color color);
-	void addImage(Point p, int squareSize, std::string& character);
+	void addImage(Point p, int squareSize);
+
+	// checks if any elements are at this square
+	bool checkIfElement(const std::vector<Pos>& elements, int row, int col) const;
 
 public:
 	Solver solver;
