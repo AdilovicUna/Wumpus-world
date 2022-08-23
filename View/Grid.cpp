@@ -97,14 +97,22 @@ void Grid::fillRectangle(Point p, int squareSize, SDL_Color color)
 void Grid::addImage(Point p, int squareSize)
 {
 
-	//image = SDL_LoadBMP("Images/agent.png");
-	image = IMG_Load("Images/rand.jpg");
+	/*image = IMG_Load("Images/rand.jpg");
 	texture = SDL_CreateTextureFromSurface(renderer, image);
 
-	SDL_Rect rect = { p.x, p.y, squareSize, squareSize };
 	SDL_RenderClear(renderer);
 	SDL_RenderCopy(renderer, texture, NULL, &rect);
+	SDL_RenderPresent(renderer);*/
+
+	font = TTF_OpenFont("arial.ttf", 25);
+	SDL_Color color = { 255, 255, 255 };
+	SDL_Surface* surface = TTF_RenderText_Solid(font,
+		"Welcome to Gigi Labs", color);
+	texture = SDL_CreateTextureFromSurface(renderer, surface);
+	SDL_Rect rect = { p.x, p.y, squareSize, squareSize };
+	SDL_RenderCopy(renderer, texture, NULL, NULL);
 	SDL_RenderPresent(renderer);
+
 }
 
 void Grid::selectSquare(Point p)
@@ -170,4 +178,5 @@ void Grid::clean()
 	SDL_FreeSurface(surface);
 	SDL_FreeSurface(image);
 	SDL_DestroyTexture(texture);
+	TTF_CloseFont(font);
 }

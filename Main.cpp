@@ -3,6 +3,36 @@
 
 //NOTE: height = row, width = col
 
+void mouseEventHandler(SDL_Event event, Button &buttons, Grid &grid, Point cursorPos)
+{
+    if (buttons.isHelpButtonClicked(cursorPos)) // check if we clicked help button
+        buttons.openHelp();
+    else if (buttons.isExitHelpButtonClicked(cursorPos)) // check if we clicked exit help button
+        buttons.closeHelp();
+    else if (buttons.isPlayButtonClicked(cursorPos)) // check if we clicked play button
+        std::cout << "Play clicked" << std::endl;
+    else if (event.button.clicks == 2) // check if it was a double click
+        grid.selectSquare(cursorPos);
+}
+
+bool eventHandler(SDL_Event event, Button &buttons, Grid &grid)
+{
+    if (event.type == SDL_QUIT) // x clicked
+    {
+        return false;
+    }
+    else if (event.type == SDL_MOUSEBUTTONDOWN) // mouse click
+    {
+        mouseEventHandler(event, buttons, grid, { event.button.x, event.button.y });
+    }
+    else if (event.type == SDL_KEYDOWN)
+    {
+        grid.addElement(event.key.keysym.sym, { event.button.x, event.button.y });
+    }
+
+    return true;
+}
+
 int main(int argc, char* argv[])
 {
     int size = 5;
@@ -56,26 +86,8 @@ int main(int argc, char* argv[])
     {
         while (SDL_PollEvent(&event) != 0)
         {
-            if (event.type == SDL_QUIT) // x clicked
-            {
+            if (!eventHandler(event, buttons, grid))
                 running = false;
-            }
-            else if (event.type == SDL_MOUSEBUTTONDOWN) // mouse click
-            {
-                Point cursorPos = { event.button.x, event.button.y };
-
-                if (buttons.isHelpButtonClicked(cursorPos)) // check if we clicked help
-                    std::cout << "Help clicked" << std::endl;
-                else if (buttons.isPlayButtonClicked(cursorPos)) // check if we clicked play
-                    std::cout << "Play clicked" << std::endl;
-                else if (event.button.clicks == 2) // check if it was a double click
-                    grid.selectSquare(cursorPos);
-            }
-            else if (event.type == SDL_KEYDOWN)
-            {
-                Point p = { event.button.x, event.button.y };
-                grid.addElement(event.key.keysym.sym, p);
-            }
         }
 
         // clear
@@ -83,7 +95,12 @@ int main(int argc, char* argv[])
         SDL_RenderClear(renderer);
 
         // draw
-        grid.drawGrid();
+
+        if (!buttons.showHelp)
+        {
+            grid.drawGrid();
+        }
+
         buttons.drawButtons();
 
         // show

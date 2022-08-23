@@ -5,6 +5,7 @@
 #include "SDL.h"
 #include <stdio.h>
 #include "SDL_image.h"
+#include "SDL_ttf.h"
 #include <string>
 
 class Grid
@@ -14,6 +15,7 @@ private:
 	SDL_Surface* surface = nullptr;
 	SDL_Surface* image = nullptr;
 	SDL_Texture* texture = nullptr;
+	TTF_Font* font = nullptr;
 
 	// colors
 	SDL_Color outlineColor = { 200, 200, 200, SDL_ALPHA_OPAQUE }; // light gray
