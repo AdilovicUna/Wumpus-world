@@ -1,7 +1,7 @@
 #include "WumpusWorld.hpp"
 
 WumpusWorld::WumpusWorld(int n)
-    : height(n), width(n), grid(n, std::vector<std::set<Element>>(n, std::set<Element>()))
+    : size(n), grid(n, std::vector<std::set<Element>>(n, std::set<Element>()))
 {
     // agent can only start at the bottom left corner
     Pos agentPos = { n - 1 , 0 };
@@ -59,7 +59,7 @@ bool WumpusWorld::addElement(const Pos& pos, const Element &elem)
     // if we try to add more than 1 object at the same pos
     if (getLayer[elem] == object &&
         (hasObject(grid[pos.getRow()][pos.getCol()]) || 
-        (pos.getRow() == height - 1 && pos.getCol() == 0)))
+        (pos.getRow() == size - 1 && pos.getCol() == 0)))
     {
         return false;
     }
@@ -120,8 +120,8 @@ std::vector<Pos> WumpusWorld::getNeighbors(const Pos &pos) const
     for (int i = 0; i < 4; i++)
     {
         Pos newPos(pos.getRow() + neighborRow[i], pos.getCol() + neighborCol[i]);
-        if (0 <= newPos.getRow() && newPos.getRow() < height &&
-            0 <= newPos.getCol() && newPos.getCol() < width)
+        if (0 <= newPos.getRow() && newPos.getRow() < size &&
+            0 <= newPos.getCol() && newPos.getCol() < size)
         {
             result.push_back(newPos);
         }
@@ -144,9 +144,9 @@ bool WumpusWorld::hasObject(const std::set<Element> &cell) const
 
 Pos WumpusWorld::findElement(const Element &elem) const
 {
-    for (int i = 0; i < height; i++)
+    for (int i = 0; i < size; i++)
     {
-        for (int j = 0; j < width; j++)
+        for (int j = 0; j < size; j++)
         {
             for (const auto& e : getCell(Pos{ i, j }))
             {
@@ -164,9 +164,9 @@ std::vector<Pos> WumpusWorld::findMultipleElements(const Element &elem) const
 {
     std::vector<Pos> result;
 
-    for (int i = 0; i < height; i++)
+    for (int i = 0; i < size; i++)
     {
-        for (int j = 0; j < width; j++)
+        for (int j = 0; j < size; j++)
         {
             for (const auto& e : getCell(Pos{ i, j }))
             {
@@ -203,14 +203,9 @@ const std::set<Element> &WumpusWorld::getCell(const Pos &pos) const
     return grid[pos.getRow()][pos.getCol()];
 }
 
-int WumpusWorld::getHeight() const
+int WumpusWorld::getSize() const
 {
-    return height;
-}
-
-int WumpusWorld::getWidth() const
-{
-    return width;
+    return size;
 }
 
 void WumpusWorld::moveAgent(const Pos &prevPos, const Pos &newPos)

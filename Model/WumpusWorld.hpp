@@ -33,8 +33,7 @@ inline std::map<Element, std::string> getElementName = {{agent, "a"}, {gold, "g"
 class WumpusWorld
 {
 private:
-    int height;
-    int width;
+    int size;
 
     std::vector<std::vector<std::set<Element>>> grid;
 
@@ -76,8 +75,7 @@ public:
     // moves the agent from one position to another
     void moveAgent(const Pos &prevPos, const Pos &newPos);
 
-    int getHeight() const;
-    int getWidth() const;
+    int getSize() const;
 
     void printGrid() const;
 };

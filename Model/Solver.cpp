@@ -1,6 +1,6 @@
 #include "Solver.hpp"
 
-Solver::Solver(WumpusWorld w) : world(w), KB(w.getHeight(), w.getWidth())
+Solver::Solver(WumpusWorld w) : world(w), KB(w.getSize())
 {
 }
 
@@ -17,6 +17,11 @@ bool Solver::isFinished(const std::set<Element> &cell) const
         return true;
     }
     return false;
+}
+
+void Solver::solve()
+{
+    solve(Pos{ world.getSize() - 1, 0 });
 }
 
 void Solver::solve(Pos agent)

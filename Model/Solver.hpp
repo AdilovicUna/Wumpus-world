@@ -23,10 +23,13 @@ private:
 
     // checks if we finished the search and prints the appropriate message
     bool isFinished(const std::set<Element> &cell) const;
+    
+    void solve(Pos agent);
 
 public:
     WumpusWorld world;
 
     Solver(WumpusWorld w);
-    void solve(Pos agent);
+    void solve();
+
 };

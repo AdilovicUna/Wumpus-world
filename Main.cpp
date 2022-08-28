@@ -12,7 +12,7 @@ void mouseEventHandler(SDL_Event event, Button &buttons, Grid &grid, Point curso
     else if (buttons.isPlayButtonClicked(cursorPos)) // check if we clicked play button
     {
         std::cout << "play" << std::endl;
-        grid.solver.solve(Pos{grid.size - 1, 0});
+        grid.solver.solve();
     }
     else if (event.button.clicks == 2) // check if it was a double click
         grid.selectSquare(cursorPos);
@@ -85,6 +85,8 @@ int main(int argc, char* argv[])
     Button buttons(renderer);
     Pos wumpusPos(1, 0);
     Pos goldPos(1, 1);
+
+    // TEMP
     std::vector<Pos> pitPos = {{0, 3}, {1, 2}, {3, 2}};
     grid.solver.world.addWumpus(wumpusPos);
     grid.solver.world.addGold(goldPos);

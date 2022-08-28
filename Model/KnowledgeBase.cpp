@@ -1,9 +1,9 @@
 #include "KnowledgeBase.hpp"
 
-KnowledgeBase::KnowledgeBase(std::size_t gridH, std::size_t gridW)
-    : gridHeight(gridH), gridWidth(gridW), agent(Pos(gridH - 1, 0)), 
-    grid(gridH, std::vector<std::set<Element>>(gridW, std::set<Element>())),
-    exploredGrid(gridH, std::vector<bool>(gridW))
+KnowledgeBase::KnowledgeBase(int size)
+    : gridSize(size), agent(Pos(size - 1, 0)),
+    grid(size, std::vector<std::set<Element>>(size, std::set<Element>())),
+    exploredGrid(size, std::vector<bool>(size))
 {
 }
 
@@ -48,8 +48,8 @@ bool KnowledgeBase::objectAtPos(const Pos &pos, const Element &percept) const
     for (int i = 0; i < 4; i++)
     {
         Pos newPos(pos.getRow() + neighborRow[i], pos.getCol() + neighborCol[i]);
-        if ((0 <= newPos.getRow() && newPos.getRow() < gridHeight &&
-            0 <= newPos.getCol() && newPos.getCol() < gridWidth) &&
+        if ((0 <= newPos.getRow() && newPos.getRow() < gridSize &&
+            0 <= newPos.getCol() && newPos.getCol() < gridSize) &&
             !perceptAtPos(pos, percept))
         {
             return false;

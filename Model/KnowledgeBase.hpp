@@ -9,8 +9,8 @@ inline std::map<Move, std::string> getMoveName = {{unsafe, "unsafe"}, {unknown, 
 
 class KnowledgeBase
 {
-    std::size_t gridHeight;
-    std::size_t gridWidth;
+    int gridSize;
+
     std::vector<std::vector<std::set<Element>>> grid;
     Pos agent;
     // adds an elem at the pos position to the grid
@@ -25,7 +25,7 @@ public:
     // keeps track of explored cells
     std::vector<std::vector<bool>> exploredGrid;
 
-    KnowledgeBase(std::size_t gridH, std::size_t gridW);
+    KnowledgeBase(int size);
 
     // add some information to the KB
     void tell(Pos &pos, std::set<Element> &info);
