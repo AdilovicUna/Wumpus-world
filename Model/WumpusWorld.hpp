@@ -41,10 +41,10 @@ private:
     // adds an elem at the pos position to the grid
     // returns false if the element was not added
     // otherwise true
-    bool addElement(Pos pos, Element elem);
+    bool addElement(const Pos &pos, const Element &elem);
 
     // removes an elem at the pos position to the grid
-    void removeElement(Pos pos, Element elem);
+    void removeElement(const Pos &pos, const Element &elem);
 
     // check if cell has any element in object layer
     bool hasObject(const std::set<Element> &cell) const;
@@ -53,28 +53,28 @@ private:
 public:
     WumpusWorld(int n);
 
-    void addWumpus(Pos wumpusPos);
-    void addPit(Pos wumpusPos);
-    void addGold(Pos wumpusPos);
+    void addWumpus(const Pos& wumpusPos);
+    void addPit(const Pos &wumpusPos);
+    void addGold(const Pos &wumpusPos);
 
     void removeWumpus();
-    void removePit(Pos pitPos);
+    void removePit(const Pos &pitPos);
     void removeGold();
 
     // gets content of a cell at position pos
-    const std::set<Element> &getCell(Pos pos) const;
+    const std::set<Element> &getCell(const Pos &pos) const;
 
     // find position of an elem
-    Pos findElement(Element elem) const;
+    Pos findElement(const Element &elem) const;
 
     // find position of all elem
-    std::vector<Pos> findMultipleElements(Element elem) const;
+    std::vector<Pos> findMultipleElements(const Element &elem) const;
 
     // gets all neighbor positions of pos (4 sides, if they are not walls)
-    std::vector<Pos> getNeighbors(Pos pos) const;
+    std::vector<Pos> getNeighbors(const Pos &pos) const;
 
     // moves the agent from one position to another
-    void moveAgent(Pos prevPos, Pos newPos);
+    void moveAgent(const Pos &prevPos, const Pos &newPos);
 
     int getHeight() const;
     int getWidth() const;

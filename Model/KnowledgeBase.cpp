@@ -7,12 +7,12 @@ KnowledgeBase::KnowledgeBase(std::size_t gridH, std::size_t gridW)
 {
 }
 
-void KnowledgeBase::addElement(Pos pos, Element elem)
+void KnowledgeBase::addElement(const Pos &pos, const Element &elem)
 {
     grid[pos.getRow()][pos.getCol()].insert(elem);
 }
 
-void KnowledgeBase::tell(Pos pos, std::set<Element> info)
+void KnowledgeBase::tell(Pos &pos, std::set<Element> &info)
 {
     exploredGrid[pos.getRow()][pos.getCol()] = true;
     for(const auto &elem: info)
@@ -24,27 +24,8 @@ void KnowledgeBase::tell(Pos pos, std::set<Element> info)
     }
 }
 
-Move KnowledgeBase::ask(Pos curr, Pos next)
+Move KnowledgeBase::ask(const Pos &curr, const Pos &next) const
 {
-    // std::cout<<"ask curr: "<<curr.getCol()<<" "<<curr.getRow()<<std::endl;
-    // std::cout<<"ask next: "<<next.getCol()<<" "<<next.getRow()<<std::endl;
-    // std::cout<<"Ask grid:"<<std::endl;
-    // std::cout<<"####################"<<std::endl;
-    // for (const auto &row : grid)
-    // {
-    //     for (const auto &col : row)
-    //     {
-    //         std::cout << "( ";
-    //         for (const auto &elem : col)
-    //         {
-    //             std::cout << getElementName[elem] << " ";
-    //         }
-    //         std::cout << ") ";
-    //     }
-    //     std::cout << std::endl;
-    // }
-    // std::cout<<"####################"<<std::endl;
-
     if(grid[curr.getRow()][curr.getCol()].empty())
     {
         return safe;
@@ -59,7 +40,7 @@ Move KnowledgeBase::ask(Pos curr, Pos next)
     }
 }
 
-bool KnowledgeBase::objectAtPos(Pos pos, Element percept)
+bool KnowledgeBase::objectAtPos(const Pos &pos, const Element &percept) const
 {
     std::vector<Pos> neighbors;
     int neighborRow[4] = {-1, 1, 0, 0};
@@ -77,7 +58,7 @@ bool KnowledgeBase::objectAtPos(Pos pos, Element percept)
     return true;
 }
 
-bool KnowledgeBase::perceptAtPos(Pos pos, Element percept)
+bool KnowledgeBase::perceptAtPos(const Pos& pos, const Element& percept) const
 {
     return grid[pos.getRow()][pos.getCol()].find(percept) != grid[pos.getRow()][pos.getCol()].end();
 }

@@ -177,6 +177,12 @@
     <None Include="SDL2_image.dll" />
     <None Include="SDL2_ttf.dll" />
   </ItemGroup>
+  <ItemGroup>
+    <Font Include="..\..\Lemon Love.ttf" />
+    <Font Include="View\font.ttf" />
+    <Font Include="View\Font\font.ttf" />
+    <Font Include="View\Font\Lemon Love.ttf" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

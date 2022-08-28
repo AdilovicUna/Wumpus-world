@@ -2,7 +2,16 @@
 
 Grid::Grid(SDL_Renderer* r, int n) : size(n), renderer(r), solver(WumpusWorld(n))
 {
-}
+	if (TTF_Init() == -1)
+	{
+		std::cout << "blah" << std::endl;
+	}
+	font = TTF_OpenFont("Font/font.ttf", 25);
+	if (font == NULL)
+	{
+		std::cout << "blahblah" << std::endl;
+	}
+} 
 
 void Grid::drawGrid()
 {
@@ -82,6 +91,8 @@ void Grid::drawRectangle(Point p, int squareSize, SDL_Color color)
 	// draw the rectangle
 	SDL_Rect rect = { p.x, p.y, squareSize, squareSize};
 	SDL_RenderDrawRect(renderer, &rect);
+
+	
 }
 
 void Grid::fillRectangle(Point p, int squareSize, SDL_Color color)
@@ -104,15 +115,26 @@ void Grid::addImage(Point p, int squareSize)
 	SDL_RenderCopy(renderer, texture, NULL, &rect);
 	SDL_RenderPresent(renderer);*/
 
-	font = TTF_OpenFont("arial.ttf", 25);
-	SDL_Color color = { 255, 255, 255 };
-	SDL_Surface* surface = TTF_RenderText_Solid(font,
-		"Welcome to Gigi Labs", color);
-	texture = SDL_CreateTextureFromSurface(renderer, surface);
-	SDL_Rect rect = { p.x, p.y, squareSize, squareSize };
-	SDL_RenderCopy(renderer, texture, NULL, NULL);
-	SDL_RenderPresent(renderer);
 
+	SDL_Color color = { 0, 0, 150, SDL_ALPHA_OPAQUE };
+	surface = TTF_RenderText_Solid(font, "Lalalala", color);
+	texture = SDL_CreateTextureFromSurface(renderer, surface);
+
+	//SDL_SetRenderDrawColor(renderer, agentColor.r, agentColor.g, agentColor.b, agentColor.a);
+	//SDL_Rect rect = { p.x, p.y, squareSize, squareSize };
+	//SDL_RenderFillRect(renderer, &rect);
+
+	//int textureWidth;
+	//int textureHeight;
+	//SDL_QueryTexture(texture, NULL, NULL, &textureWidth, &textureHeight);
+
+	//const int textureStartRow = rect.y + 0.5 * (rect.h - textureHeight);
+	//const int textureStartCol = rect.x + 0.5 * (rect.w - textureWidth);
+
+	//SDL_Rect trect = { textureStartCol, textureStartRow, textureWidth, textureHeight };
+	SDL_Rect trect = { 100, 100, 100, 100 };
+
+	SDL_RenderCopy(renderer, texture, nullptr, &trect);
 }
 
 void Grid::selectSquare(Point p)

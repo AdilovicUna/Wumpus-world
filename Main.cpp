@@ -10,7 +10,10 @@ void mouseEventHandler(SDL_Event event, Button &buttons, Grid &grid, Point curso
     else if (buttons.isExitHelpButtonClicked(cursorPos)) // check if we clicked exit help button
         buttons.closeHelp();
     else if (buttons.isPlayButtonClicked(cursorPos)) // check if we clicked play button
-        std::cout << "Play clicked" << std::endl;
+    {
+        std::cout << "play" << std::endl;
+        grid.solver.solve(Pos{grid.size - 1, 0});
+    }
     else if (event.button.clicks == 2) // check if it was a double click
         grid.selectSquare(cursorPos);
 }
@@ -35,7 +38,7 @@ bool eventHandler(SDL_Event event, Button &buttons, Grid &grid)
 
 int main(int argc, char* argv[])
 {
-    int size = 5;
+    int size = 4;
 
     //Pos agentPos(gridH - 1, 0);
     //Pos wumpusPos(1, 0);
@@ -80,6 +83,15 @@ int main(int argc, char* argv[])
 
     Grid grid(renderer, size);
     Button buttons(renderer);
+    Pos wumpusPos(1, 0);
+    Pos goldPos(1, 1);
+    std::vector<Pos> pitPos = {{0, 3}, {1, 2}, {3, 2}};
+    grid.solver.world.addWumpus(wumpusPos);
+    grid.solver.world.addGold(goldPos);
+    for (const auto& pit : pitPos)
+    {
+        grid.solver.world.addPit(pit);
+    }
 
     // keep redrawing everything
     while (running)

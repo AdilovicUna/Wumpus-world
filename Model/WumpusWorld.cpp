@@ -8,7 +8,7 @@ WumpusWorld::WumpusWorld(int n)
     addElement(agentPos, agent);
 }
 
-void WumpusWorld::addWumpus(Pos wumpusPos)
+void WumpusWorld::addWumpus(const Pos &wumpusPos)
 {
     if (wumpusPos.getRow() == -1)
     {
@@ -26,7 +26,7 @@ void WumpusWorld::addWumpus(Pos wumpusPos)
     }
 }
 
-void WumpusWorld::addPit(Pos pitPos)
+void WumpusWorld::addPit(const Pos &pitPos)
 {
     if (pitPos.getRow() == -1)
     {
@@ -43,7 +43,7 @@ void WumpusWorld::addPit(Pos pitPos)
     }
 }
 
-void WumpusWorld::addGold(Pos goldPos)
+void WumpusWorld::addGold(const Pos &goldPos)
 {
     if (goldPos.getRow() == -1)
     {
@@ -54,7 +54,7 @@ void WumpusWorld::addGold(Pos goldPos)
     addElement(goldPos, gold);
 }
 
-bool WumpusWorld::addElement(Pos pos, Element elem)
+bool WumpusWorld::addElement(const Pos& pos, const Element &elem)
 {
     // if we try to add more than 1 object at the same pos
     if (getLayer[elem] == object &&
@@ -85,7 +85,7 @@ void WumpusWorld::removeWumpus()
     }
 }
 
-void WumpusWorld::removePit(Pos pitPos)
+void WumpusWorld::removePit(const Pos &pitPos)
 {
     removeElement(pitPos, pit);
 
@@ -107,12 +107,12 @@ void WumpusWorld::removeGold()
     removeElement(goldPos, gold);
 }
 
-void WumpusWorld::removeElement(Pos pos, Element elem)
+void WumpusWorld::removeElement(const Pos &pos, const Element &elem)
 {
     grid[pos.getRow()][pos.getCol()].erase(elem);
 }
 
-std::vector<Pos> WumpusWorld::getNeighbors(Pos pos) const
+std::vector<Pos> WumpusWorld::getNeighbors(const Pos &pos) const
 {
     std::vector<Pos> result;
     int neighborRow[4] = {-1, 1, 0, 0};
@@ -142,7 +142,7 @@ bool WumpusWorld::hasObject(const std::set<Element> &cell) const
     return false;
 }
 
-Pos WumpusWorld::findElement(Element elem) const
+Pos WumpusWorld::findElement(const Element &elem) const
 {
     for (int i = 0; i < height; i++)
     {
@@ -160,7 +160,7 @@ Pos WumpusWorld::findElement(Element elem) const
     return Pos{ -1, -1 };
 }
 
-std::vector<Pos> WumpusWorld::findMultipleElements(Element elem) const
+std::vector<Pos> WumpusWorld::findMultipleElements(const Element &elem) const
 {
     std::vector<Pos> result;
 
@@ -198,7 +198,7 @@ void WumpusWorld::printGrid() const
     std::cout<<"*************************"<<std::endl;
 }
 
-const std::set<Element> &WumpusWorld::getCell(Pos pos) const
+const std::set<Element> &WumpusWorld::getCell(const Pos &pos) const
 {
     return grid[pos.getRow()][pos.getCol()];
 }
@@ -213,7 +213,7 @@ int WumpusWorld::getWidth() const
     return width;
 }
 
-void WumpusWorld::moveAgent(Pos prevPos, Pos newPos)
+void WumpusWorld::moveAgent(const Pos &prevPos, const Pos &newPos)
 {
     auto iter = grid[prevPos.getRow()][prevPos.getCol()].find(agent);
     grid[prevPos.getRow()][prevPos.getCol()].erase(iter);
