@@ -117,12 +117,12 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>C:\Users\Una\Downloads\SDL2_ttf-2.0.18\include;C:\Users\Una\Downloads\SDL2_image-2.0.2\include;C:\Users\Una\Downloads\SDL2-2.0.22\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\Una\Downloads\SDL2_ttf-2.0.18\include;C:\Users\Una\Downloads\SDL2_image-2.0.5\include;C:\Users\Una\Downloads\SDL2-2.0.22\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\Users\Una\Downloads\SDL2_ttf-2.0.18\lib\x64;C:\Users\Una\Downloads\SDL2_image-2.0.2\lib\x64;C:\Users\Una\Downloads\SDL2-2.0.22\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Users\Una\Downloads\SDL2_ttf-2.0.18\lib\x64;C:\Users\Una\Downloads\SDL2_image-2.0.5\lib\x64;C:\Users\Una\Downloads\SDL2-2.0.22\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2_ttf.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -164,21 +164,24 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="View\Images\agent.png" />
-    <Image Include="View\Images\arrow.png" />
+    <Image Include="View\Images\agent_arrow.png" />
     <Image Include="View\Images\gold.png" />
     <Image Include="View\Images\pit.png" />
-    <Image Include="View\Images\rand.jpg" />
     <Image Include="View\Images\wumpus.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitattributes" />
     <None Include=".gitignore" />
+    <None Include="libjpeg-9.dll" />
+    <None Include="libpng16-16.dll" />
+    <None Include="libtiff-5.dll" />
+    <None Include="libwebp-7.dll" />
     <None Include="SDL2.dll" />
     <None Include="SDL2_image.dll" />
     <None Include="SDL2_ttf.dll" />
+    <None Include="zlib1.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Font Include="..\..\Lemon Love.ttf" />
     <Font Include="View\font.ttf" />
     <Font Include="View\Font\font.ttf" />
     <Font Include="View\Font\Lemon Love.ttf" />

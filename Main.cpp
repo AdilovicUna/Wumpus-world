@@ -3,7 +3,7 @@
 
 //NOTE: height = row, width = col
 
-void mouseEventHandler(SDL_Event event, Button &buttons, Grid &grid, Point cursorPos)
+void mouseEventHandler(SDL_Event event, Grid& grid, Button& buttons, Point cursorPos)
 {
     if (buttons.isHelpButtonClicked(cursorPos)) // check if we clicked help button
         buttons.openHelp();
@@ -12,13 +12,13 @@ void mouseEventHandler(SDL_Event event, Button &buttons, Grid &grid, Point curso
     else if (buttons.isPlayButtonClicked(cursorPos)) // check if we clicked play button
     {
         std::cout << "play" << std::endl;
-        grid.solver.solve();
+        //grid.solver.solve();
     }
     else if (event.button.clicks == 2) // check if it was a double click
         grid.selectSquare(cursorPos);
 }
 
-bool eventHandler(SDL_Event event, Button &buttons, Grid &grid)
+bool eventHandler(SDL_Event event, Grid& grid, Button& buttons)
 {
     if (event.type == SDL_QUIT) // x clicked
     {
@@ -26,7 +26,7 @@ bool eventHandler(SDL_Event event, Button &buttons, Grid &grid)
     }
     else if (event.type == SDL_MOUSEBUTTONDOWN) // mouse click
     {
-        mouseEventHandler(event, buttons, grid, { event.button.x, event.button.y });
+        mouseEventHandler(event, grid, buttons, { event.button.x, event.button.y });
     }
     else if (event.type == SDL_KEYDOWN)
     {
@@ -36,26 +36,47 @@ bool eventHandler(SDL_Event event, Button &buttons, Grid &grid)
     return true;
 }
 
+void draw(Grid& grid, Button& buttons)
+{
+    grid.drawTitle();
+
+    if (!buttons.showHelp)
+    {
+        grid.drawGrid();
+    }
+
+    buttons.drawButtons();
+}
+
 int main(int argc, char* argv[])
 {
     int size = 4;
-
-    //Pos agentPos(gridH - 1, 0);
-    //Pos wumpusPos(1, 0);
-    //Pos goldPos(1, 1);
-    //std::vector<Pos> pitPos = {{0, 3}, {1, 2}, {3, 2}};
-    //try
-    //{
-    //    WumpusWorld world(gridH, gridW, agentPos, wumpusPos, goldPos, pitPos);
-    //    Solver s(world);
-    //    s.solve(agentPos);
-    //}
-    //catch (const std::exception &e)
-    //{
-    //    std::cerr << "Invalid object placement" << '\n';
-    //}
-
     
+    // TERMINAL
+   /* Pos wumpusPos(1, 0);
+    Pos goldPos(1, 1);
+    std::vector<Pos> pitPos = { {0, 3}, {1, 2}, {3, 2} };
+   
+    try
+    {
+        WumpusWorld world(size);
+        world.addWumpus(wumpusPos);
+        world.addGold(goldPos);
+        for (const auto& pit : pitPos)
+        {
+            world.addPit(pit);
+        }
+        Solver s(world);
+        s.solve();
+        std::cout << "end" << std::endl;
+    }
+    catch (const std::exception& e)
+    {
+        std::cerr << "Invalid object placement" << '\n';
+    }*/
+
+    // WINDOW
+
     SDL_Window *window = nullptr;
     SDL_Renderer* renderer = nullptr;
 
@@ -83,24 +104,13 @@ int main(int argc, char* argv[])
 
     Grid grid(renderer, size);
     Button buttons(renderer);
-    Pos wumpusPos(1, 0);
-    Pos goldPos(1, 1);
-
-    // TEMP
-    std::vector<Pos> pitPos = {{0, 3}, {1, 2}, {3, 2}};
-    grid.solver.world.addWumpus(wumpusPos);
-    grid.solver.world.addGold(goldPos);
-    for (const auto& pit : pitPos)
-    {
-        grid.solver.world.addPit(pit);
-    }
 
     // keep redrawing everything
     while (running)
     {
         while (SDL_PollEvent(&event) != 0)
         {
-            if (!eventHandler(event, buttons, grid))
+            if (!eventHandler(event, grid, buttons))
                 running = false;
         }
 
@@ -109,13 +119,7 @@ int main(int argc, char* argv[])
         SDL_RenderClear(renderer);
 
         // draw
-
-        if (!buttons.showHelp)
-        {
-            grid.drawGrid();
-        }
-
-        buttons.drawButtons();
+        draw(grid, buttons);
 
         // show
         SDL_RenderPresent(renderer);

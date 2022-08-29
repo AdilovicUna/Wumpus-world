@@ -5,7 +5,7 @@
 enum Move {unsafe, unknown, safe};
 
 // used to make console printing more readable
-inline std::map<Move, std::string> getMoveName = {{unsafe, "unsafe"}, {unknown, "unknown"}, {safe, "safe"}};
+inline std::map<Move, std::string> getMoveName = {{Move::unsafe, "unsafe"}, {Move::unknown, "unknown"}, {Move::safe, "safe"}};
 
 class KnowledgeBase
 {

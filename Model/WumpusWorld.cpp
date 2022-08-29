@@ -208,9 +208,15 @@ int WumpusWorld::getSize() const
     return size;
 }
 
+Pos WumpusWorld::getAgentPos() const
+{
+    return agentPos;
+}
+
 void WumpusWorld::moveAgent(const Pos &prevPos, const Pos &newPos)
 {
-    auto iter = grid[prevPos.getRow()][prevPos.getCol()].find(agent);
-    grid[prevPos.getRow()][prevPos.getCol()].erase(iter);
+    auto iter = grid[agentPos.getRow()][agentPos.getCol()].find(agent);
+    grid[agentPos.getRow()][agentPos.getCol()].erase(iter);
     grid[newPos.getRow()][newPos.getCol()].insert(agent);
+    agentPos = newPos;
 }

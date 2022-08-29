@@ -25,15 +25,17 @@ enum Layer
 
 // NOTE: every cell in the grid can have at most one object but many percepts
 // zero layer is reserved for the agent as they can be part of any cell
-inline std::map<Element, Layer> getLayer = {{agent, zero}, {gold, object}, {wumpus, object}, {pit, object}, {stench, percept}, {breeze, percept}};
+inline std::map<Element, Layer> getLayer = {{Element::agent, Layer::zero}, {Element::gold, Layer::object}, {Element::wumpus, Layer::object}, {Element::pit, Layer::object}, {Element::stench, Layer::percept}, {Element::breeze, Layer::percept}};
 
 // used to make console printing more readable
-inline std::map<Element, std::string> getElementName = {{agent, "a"}, {gold, "g"}, {wumpus, "w"}, {pit, "p"}, {stench, "s"}, {breeze, "b"}};
+inline std::map<Element, std::string> getElementName = {{Element::agent, "a"}, {Element::gold, "g"}, {Element::wumpus, "w"}, {Element::pit, "p"}, {Element::stench, "s"}, {Element::breeze, "b"}};
 
 class WumpusWorld
 {
 private:
     int size;
+
+    Pos agentPos = { size - 1, 0 };
 
     std::vector<std::vector<std::set<Element>>> grid;
 
@@ -50,6 +52,8 @@ private:
 
 
 public:
+    bool hasArrow = true;
+
     WumpusWorld(int n);
 
     void addWumpus(const Pos& wumpusPos);
@@ -76,6 +80,8 @@ public:
     void moveAgent(const Pos &prevPos, const Pos &newPos);
 
     int getSize() const;
+
+    Pos getAgentPos() const;
 
     void printGrid() const;
 };

@@ -26,7 +26,7 @@ void KnowledgeBase::tell(Pos &pos, std::set<Element> &info)
 
 Move KnowledgeBase::ask(const Pos &curr, const Pos &next) const
 {
-    if(grid[curr.getRow()][curr.getCol()].empty())
+    if(grid[curr.getRow()][curr.getCol()].empty()) // agent is only in this cell
     {
         return safe;
     }

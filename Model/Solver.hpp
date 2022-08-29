@@ -6,7 +6,7 @@ class Solver
 {
 private:
     KnowledgeBase KB;
-    
+
     std::vector<Pos> pathTaken;
 
     // checks if agent is in the same cell as the gold
@@ -24,8 +24,6 @@ private:
     // checks if we finished the search and prints the appropriate message
     bool isFinished(const std::set<Element> &cell) const;
     
-    void solve(Pos agent);
-
 public:
     WumpusWorld world;
 

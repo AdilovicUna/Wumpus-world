@@ -21,53 +21,49 @@ bool Solver::isFinished(const std::set<Element> &cell) const
 
 void Solver::solve()
 {
-    solve(Pos{ world.getSize() - 1, 0 });
-}
-
-void Solver::solve(Pos agent)
-{
     world.printGrid();
+    Pos agent = world.getAgentPos();
     std::set<Element> cell = world.getCell(agent);
     //std::cout<<"agent: "<<agent.getCol()<<" "<<agent.getRow()<<std::endl;
+    std::cout << 1 << std::endl;
 
     if (isWinningPos(cell))
     {
+        std::cout << 2 << std::endl;
         traceBack();
+        return;
     }
     else if (isLoosingPos(cell))
     {
+        std::cout << 3 << std::endl;
         losingMessage();
+        return;
     }
-    else
+
+    KB.tell(agent, cell);
+    Move nextMove = unsafe;
+    Pos nextPos(agent);
+    for (auto neighbor : world.getNeighbors(agent))
     {
-        KB.tell(agent, cell);
-        Move nextMove = unsafe;
-        Pos nextPos(agent);
-        for (auto neighbor : world.getNeighbors(agent))
+        //std::cout << "neighbor: " << neighbor.getRow() << " " << neighbor.getCol() << std::endl;
+        //if (KB.exploredGrid[neighbor.getRow()][neighbor.getCol()])
+        //{
+        //    //std::cout<<"continue"<<std::endl;
+        //    // we already went to this cell
+        //    continue;
+        //}
+        //std::cout << "ask result: " << getMoveName[temp] << std::endl;
+        std::cout << 4 << std::endl;
+
+        if (KB.ask(agent, neighbor) == safe)
         {
-            //std::cout << "neighbor: " << neighbor.getRow() << " " << neighbor.getCol() << std::endl;
-            if (KB.exploredGrid[neighbor.getRow()][neighbor.getCol()])
-            {
-                //std::cout<<"continue"<<std::endl;
-                // we already went to this cell
-                continue;
-            }
-            Move temp = KB.ask(agent, neighbor);
-            //std::cout << "ask result: " << getMoveName[temp] << std::endl;
-            if (temp > nextMove)
-            {
-                nextMove = temp;
-                nextPos = neighbor;
-            }
-            if (nextMove == safe)
-            {
-               break;
-            }
+            std::cout << 5 << std::endl;
+            //pathTaken.push_back(nextPos);
+            world.moveAgent(agent, nextPos);
+            solve();
         }
-        pathTaken.push_back(nextPos);
-        world.moveAgent(agent,nextPos);
-        solve(nextPos);
     }
+    return;
 }
 
 bool Solver::isWinningPos(const std::set<Element> &cell) const
@@ -84,11 +80,12 @@ bool Solver::isLoosingPos(const std::set<Element> &cell) const
 
 void Solver::traceBack() const
 {
-    for (auto elem : pathTaken)
+    /*for (auto elem : pathTaken)
     {
         std::cout << "(" << elem.getRow() << " " << elem.getCol() << ")";
     }
-    std::cout << std::endl;
+    std::cout << std::endl;*/
+    std::cout << "won" << std::endl;
 }
 
 void Solver::losingMessage() const
