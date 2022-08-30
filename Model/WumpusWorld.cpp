@@ -126,7 +126,6 @@ std::vector<Pos> WumpusWorld::getNeighbors(const Pos &pos) const
             result.push_back(newPos);
         }
     }
-    //std::cout << "# of neighbors: " << result.size() << std::endl;
     return result;
 }
 
@@ -213,7 +212,15 @@ Pos WumpusWorld::getAgentPos() const
     return agentPos;
 }
 
-void WumpusWorld::moveAgent(const Pos &prevPos, const Pos &newPos)
+void WumpusWorld::shoot(const Pos& possibleWumpusPos)
+{
+    hasArrow = false;
+    auto temp = grid[possibleWumpusPos.getRow()][possibleWumpusPos.getCol()];
+    if (temp.find(wumpus) != temp.end())
+        removeWumpus();
+}
+
+void WumpusWorld::moveAgent(const Pos& prevPos, const Pos& newPos)
 {
     auto iter = grid[agentPos.getRow()][agentPos.getCol()].find(agent);
     grid[agentPos.getRow()][agentPos.getCol()].erase(iter);

@@ -6,14 +6,17 @@
 
 void mouseEventHandler(SDL_Event event, Grid& grid, Button& buttons, Point cursorPos)
 {
+    if (grid.playOn)
+        return;
+
     if (buttons.isHelpButtonClicked(cursorPos)) // check if we clicked help button
         buttons.openHelp();
     else if (buttons.isExitHelpButtonClicked(cursorPos)) // check if we clicked exit help button
         buttons.closeHelp();
     else if (buttons.isPlayButtonClicked(cursorPos)) // check if we clicked play button
     {
-        std::cout << "play" << std::endl;
-        //grid.solver.solve();
+        grid.solver.solve();
+        grid.play();
     }
     else if (event.button.clicks == 2) // check if it was a double click
         grid.selectSquare(cursorPos);
@@ -37,7 +40,7 @@ bool eventHandler(SDL_Event event, Grid& grid, Button& buttons)
     return true;
 }
 
-void draw(Grid &grid, Button &buttons)
+void draw(Grid& grid, Button& buttons)
 {
     buttons.drawTitle();
 
@@ -96,10 +99,10 @@ int main(int argc, char* argv[])
     int size = stoi(configVars[0].second);
 
     // TERMINAL
-   /* Pos wumpusPos(1, 0);
+    /*Pos wumpusPos(1, 0);
     Pos goldPos(1, 1);
     std::vector<Pos> pitPos = { {0, 3}, {1, 2}, {3, 2} };
-   
+
     try
     {
         WumpusWorld world(size);
@@ -111,6 +114,10 @@ int main(int argc, char* argv[])
         }
         Solver s(world);
         s.solve();
+        for (const auto& node : s.pathTaken)
+        {
+            std::cout << "(" << node.getRow() << " " << node.getCol() << ") ";
+        }
         std::cout << "end" << std::endl;
     }
     catch (const std::exception& e)
@@ -119,15 +126,15 @@ int main(int argc, char* argv[])
     }*/
 
     // WINDOW
-    SDL_Window *window = nullptr;
+    SDL_Window* window = nullptr;
     SDL_Renderer* renderer = nullptr;
 
     SDL_Init(SDL_INIT_VIDEO);
 
     window = SDL_CreateWindow(
         "Wumpus-world",
-        SDL_WINDOWPOS_UNDEFINED, 
-        SDL_WINDOWPOS_UNDEFINED, 
+        SDL_WINDOWPOS_UNDEFINED,
+        SDL_WINDOWPOS_UNDEFINED,
         800,
         800,
         SDL_WINDOW_OPENGL
@@ -164,6 +171,8 @@ int main(int argc, char* argv[])
 
         // show
         SDL_RenderPresent(renderer);
+
+        SDL_Delay(10);
     }
 
     // clean

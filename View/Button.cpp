@@ -1,4 +1,5 @@
 #include "Button.hpp"
+#include <iostream>
 
 Button::Button(SDL_Renderer* &r) : renderer(r)
 {
@@ -12,13 +13,13 @@ Button::Button(SDL_Renderer* &r) : renderer(r)
 		printf(TTF_GetError());
 }
 
-void Button::drawButton(Point p, int width, int height)
+void Button::drawButton(const Point &p, int width, int height)
 {
 	// set the color
 	SDL_SetRenderDrawColor(renderer, outlineColor.r, outlineColor.g, outlineColor.b, outlineColor.a);
 
 	// draw the rectangle
-	SDL_Rect rect = { p.x, p.y, width, height };
+	rect = { p.x, p.y, width, height };
 	SDL_RenderDrawRect(renderer, &rect);
 }
 
@@ -55,7 +56,7 @@ void Button::drawTitle()
 	displayText(titlePos, titleWidth, titleHeight, bigFont, title);
 }
 
-void Button::displayText(Point p, int width, int height, TTF_Font* &font, const char* &text)
+void Button::displayText(const Point &p, int width, int height, TTF_Font* &font, const char* &text)
 {
 	surface = TTF_RenderText_Solid(font, text, outlineColor);
 	texture = SDL_CreateTextureFromSurface(renderer, surface);
@@ -74,7 +75,7 @@ void Button::displayText(Point p, int width, int height, TTF_Font* &font, const 
 	SDL_RenderCopy(renderer, texture, nullptr, &rect);
 }
 
-bool Button::isPlayButtonClicked(Point p)
+bool Button::isPlayButtonClicked(const Point &p)
 {
 	if (!showHelp // cannot be clicked when help is open
 		&& p.x > playButton.x && p.x < playButton.x + playButtonWidth
@@ -85,7 +86,7 @@ bool Button::isPlayButtonClicked(Point p)
 	return false;
 }
 
-bool Button::isHelpButtonClicked(Point p)
+bool Button::isHelpButtonClicked(const Point &p)
 {
 	if (!showHelp // cannot be clicked when help is open
 		&& p.x > helpButton.x && p.x < helpButton.x + helpButtonWidth
@@ -96,7 +97,7 @@ bool Button::isHelpButtonClicked(Point p)
 	return false;
 }
 
-bool Button::isExitHelpButtonClicked(Point p)
+bool Button::isExitHelpButtonClicked(const Point &p)
 {
 	if ( showHelp // can only be clicked when help is open
 		&& p.x > exitHelpButton.x && p.x < exitHelpButton.x + exitHelpButtonWidth

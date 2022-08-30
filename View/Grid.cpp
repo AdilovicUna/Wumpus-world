@@ -19,7 +19,7 @@ void Grid::drawGrid()
 	int squareSize = boardSize / size;
 	Point curr;
 
-	Pos agentPos = solver.world.findElement(agent);
+	Pos agentPos = solver.world.getAgentPos();
 	Pos goldPos = solver.world.findElement(gold);
 	Pos wumpusPos = solver.world.findElement(wumpus);
 	std::vector<Pos> pitsPos = solver.world.findMultipleElements(pit);
@@ -76,6 +76,29 @@ void Grid::drawGrid()
 		}
 		col++;
 	}
+}
+
+void Grid::play()
+{
+	std::cout << "inside play" << std::endl;
+	playOn = true;
+	Pos curr = solver.world.getAgentPos();
+	for (const auto& pos : solver.pathTaken)
+	{
+		solver.world.moveAgent(curr, pos);
+		curr = pos;
+		std::cout << "forward" << std::endl;
+		SDL_Delay(100);
+	}
+
+	for (int i = solver.pathTaken.size() - 1; i >= 0; i--)
+	{
+		solver.world.moveAgent(curr, solver.pathTaken[i]);
+		curr = solver.pathTaken[i];
+		std::cout << "return" << std::endl;
+		SDL_Delay(100);
+	}
+	playOn = false;
 }
 
 bool Grid::checkIfElementOnPos(const std::vector<Pos> &elements, int row, int col) const

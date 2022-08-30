@@ -57,8 +57,8 @@ public:
     WumpusWorld(int n);
 
     void addWumpus(const Pos& wumpusPos);
-    void addPit(const Pos &wumpusPos);
-    void addGold(const Pos &wumpusPos);
+    void addPit(const Pos &pitPos);
+    void addGold(const Pos &goldPos);
 
     void removeWumpus();
     void removePit(const Pos &pitPos);
@@ -76,12 +76,14 @@ public:
     // gets all neighbor positions of pos (4 sides, if they are not walls)
     std::vector<Pos> getNeighbors(const Pos &pos) const;
 
-    // moves the agent from one position to another
-    void moveAgent(const Pos &prevPos, const Pos &newPos);
-
     int getSize() const;
 
     Pos getAgentPos() const;
 
     void printGrid() const;
+
+    void moveAgent(const Pos& prevPos, const Pos& newPos);
+
+    // removes wumpus if he is at that position
+    void shoot(const Pos& possibleWumpusPos);
 };

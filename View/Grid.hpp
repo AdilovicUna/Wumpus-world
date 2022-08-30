@@ -2,10 +2,10 @@
 
 #include "../Model/Solver.hpp"
 #include "Point.hpp"
+#include <string>
 #include "SDL.h"
 #include <stdio.h>
 #include "SDL_image.h"
-#include <string>
 
 class Grid
 {
@@ -51,11 +51,15 @@ public:
 
 	int size;
 
+	// currently playing the simulation
+	bool playOn = false;
+
 	Grid(SDL_Renderer* &r, int n);
 
 	void drawGrid();
 	void selectSquare(const Point &p);
 	void addElement(const SDL_Keycode &key, const Point &p);
+	void play();
 
 	Pos getCell(const Point &p) const;
 

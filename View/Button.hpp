@@ -57,8 +57,8 @@ private:
 
 	SDL_Color outlineColor = { 200, 200, 200, SDL_ALPHA_OPAQUE }; // light gray
 
-	void drawButton(Point p, int height, int width);
-	void displayText(Point p, int width, int height, TTF_Font* &font, const char* &text);
+	void drawButton(const Point &p, int height, int width);
+	void displayText(const Point &p, int width, int height, TTF_Font* &font, const char* &text);
 	void displayHelp();
 
 public:
@@ -73,9 +73,9 @@ public:
 	void drawTitle();
 
 	// check button clicks
-	bool isPlayButtonClicked(Point p);
-	bool isHelpButtonClicked(Point p);
-	bool isExitHelpButtonClicked(Point p);
+	bool isPlayButtonClicked(const Point &p);
+	bool isHelpButtonClicked(const Point &p);
+	bool isExitHelpButtonClicked(const Point &p);
 
 	void openHelp();
 	void closeHelp();
