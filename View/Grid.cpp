@@ -1,22 +1,14 @@
 #include "Grid.hpp"
 
-Grid::Grid(SDL_Renderer* r, int n) : size(n), renderer(r), solver(WumpusWorld(n))
+Grid::Grid(SDL_Renderer* &r, int n) : size(n), renderer(r), solver(WumpusWorld(n))
 {
-	if (TTF_Init() == -1)
-		printf(TTF_GetError());
-
-	font = TTF_OpenFont("View/Font/font.ttf", 25);
-
-	if (font == NULL)
-		printf("Failed to load lazy font! SDL_ttf Error: %s\n", TTF_GetError());
-
 	agentImage = IMG_Load("View/Images/agent.png");
 	agentArrowImage = IMG_Load("View/Images/agent_arrow.png");
 	goldImage = IMG_Load("View/Images/gold.png");
 	wumpusImage = IMG_Load("View/Images/wumpus.png");
 	pitImage = IMG_Load("View/Images/pit.png");
 
-	if (agentImage == NULL || agentArrowImage == NULL || goldImage == NULL || wumpusImage == NULL || pitImage == NULL)
+	if (!agentImage || !agentArrowImage || !goldImage || !wumpusImage || !pitImage)
 	{
 		printf(IMG_GetError());
 	}
@@ -86,11 +78,6 @@ void Grid::drawGrid()
 	}
 }
 
-void Grid::drawTitle()
-{
-
-}
-
 bool Grid::checkIfElementOnPos(const std::vector<Pos> &elements, int row, int col) const
 {
 	for (const auto& elemPos : elements)
@@ -103,7 +90,7 @@ bool Grid::checkIfElementOnPos(const std::vector<Pos> &elements, int row, int co
 	return false;
 }
 
-void Grid::drawRectangle(Point p, int squareSize, SDL_Color color)
+void Grid::drawRectangle(const Point &p, int squareSize, const SDL_Color &color)
 {
 	// set the color
 	SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
@@ -113,7 +100,17 @@ void Grid::drawRectangle(Point p, int squareSize, SDL_Color color)
 	SDL_RenderDrawRect(renderer, &rect);
 }
 
-void Grid::fillRectangle(Point p, int squareSize, SDL_Color color1, SDL_Color color2)
+void Grid::fillRectangle(const Point& p, int squareSize, const SDL_Color& color)
+{
+	// set the color
+	SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
+
+	// draw the filled rectangle
+	rect = { p.x, p.y, squareSize, squareSize };
+	SDL_RenderFillRect(renderer, &rect);
+}
+
+void Grid::fillRectangle(const Point &p, int squareSize, const SDL_Color &color1, const SDL_Color &color2)
 {
 	// set the color
 	SDL_SetRenderDrawColor(renderer, color1.r, color1.g, color1.b, color1.a);
@@ -128,67 +125,36 @@ void Grid::fillRectangle(Point p, int squareSize, SDL_Color color1, SDL_Color co
 	// draw the filled rectangle
 	rect = { p.x, p.y + (squareSize / 2), squareSize, squareSize / 2 };
 	SDL_RenderFillRect(renderer, &rect);
-
 }
 
-void Grid::fillRectangle(Point p, int squareSize, SDL_Color color)
+
+void Grid::addImage(const Point &p, int squareSize, const Element &elem)
 {
-	// set the color
-	SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
-
-	// draw the filled rectangle
-	rect = { p.x, p.y, squareSize, squareSize };
-	SDL_RenderFillRect(renderer, &rect);
-}
-
-void Grid::addImage(Point p, int squareSize, Element elem)
-{
-
 	switch (elem)
 	{
 	case agent:
 		if (solver.world.hasArrow)
-			image = agentArrowImage;
+			texture = SDL_CreateTextureFromSurface(renderer, agentArrowImage);
 		else
-			image = agentImage;
-		break;	
+			texture = SDL_CreateTextureFromSurface(renderer, agentImage);
+		break;
 	case gold:
-			image = goldImage;
+			texture = SDL_CreateTextureFromSurface(renderer, goldImage);
 			break;
 	case wumpus:
-		image = wumpusImage;
+		texture = SDL_CreateTextureFromSurface(renderer, wumpusImage);
 		break;
-
 	case pit:
-		image = pitImage;
+		texture = SDL_CreateTextureFromSurface(renderer, pitImage);
 		break;
 	}
 
-	texture = SDL_CreateTextureFromSurface(renderer, image);
 	rect = { p.x, p.y, squareSize, squareSize };
-
-	//SDL_Color color = { 0, 0, 150, SDL_ALPHA_OPAQUE };
-	//surface = TTF_RenderText_Solid(font, "Lalalala", color);
-	//texture = SDL_CreateTextureFromSurface(renderer, surface);
-
-	//SDL_SetRenderDrawColor(renderer, agentColor.r, agentColor.g, agentColor.b, agentColor.a);
-	//SDL_Rect rect = { p.x, p.y, squareSize, squareSize };
-	//SDL_RenderFillRect(renderer, &rect);
-
-	//int textureWidth;
-	//int textureHeight;
-	//SDL_QueryTexture(texture, NULL, NULL, &textureWidth, &textureHeight);
-
-	//const int textureStartRow = rect.y + 0.5 * (rect.h - textureHeight);
-	//const int textureStartCol = rect.x + 0.5 * (rect.w - textureWidth);
-
-	//SDL_Rect trect = { textureStartCol, textureStartRow, textureWidth, textureHeight };
-	//SDL_Rect trect = { 100, 100, 100, 100 };
 
 	SDL_RenderCopy(renderer, texture, nullptr, &rect);
 }
 
-void Grid::selectSquare(Point p)
+void Grid::selectSquare(const Point &p)
 {
 	if (p.x >= start.x && p.y >= start.y && p.x <= start.x + boardSize && p.y <= start.y + boardSize)
 	{
@@ -200,7 +166,7 @@ void Grid::selectSquare(Point p)
 	}
 }
 
-void Grid::addElement(SDL_Keycode key, Point p)
+void Grid::addElement(const SDL_Keycode &key, const Point &p)
 {
 	Pos cell = getCell(selected);
 
@@ -223,7 +189,7 @@ void Grid::addElement(SDL_Keycode key, Point p)
 	solver.world.printGrid();
 }
 
-Pos Grid::getCell(Point p)
+Pos Grid::getCell(const Point &p) const
 {
 	int squareSize = boardSize / size;
 	int row = 0;
@@ -250,8 +216,6 @@ void Grid::clean()
 	SDL_DestroyRenderer(renderer);
 	SDL_FreeSurface(surface);
 	SDL_DestroyTexture(texture);
-	TTF_CloseFont(font);
-	SDL_FreeSurface(image);
 
 	SDL_FreeSurface(agentImage);
 	SDL_FreeSurface(agentArrowImage);

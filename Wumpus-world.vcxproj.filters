@@ -94,4 +94,7 @@
     <Font Include="View\Font\font.ttf" />
     <Font Include="View\font.ttf" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="config.txt" />
+  </ItemGroup>
 </Project>

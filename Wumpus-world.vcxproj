@@ -186,6 +186,9 @@
     <Font Include="View\Font\font.ttf" />
     <Font Include="View\Font\Lemon Love.ttf" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="config.txt" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

@@ -1,5 +1,6 @@
 #include "View/Grid.hpp"
 #include "View/Button.hpp"
+#include <fstream>
 
 //NOTE: height = row, width = col
 
@@ -36,9 +37,9 @@ bool eventHandler(SDL_Event event, Grid& grid, Button& buttons)
     return true;
 }
 
-void draw(Grid& grid, Button& buttons)
+void draw(Grid &grid, Button &buttons)
 {
-    grid.drawTitle();
+    buttons.drawTitle();
 
     if (!buttons.showHelp)
     {
@@ -48,10 +49,52 @@ void draw(Grid& grid, Button& buttons)
     buttons.drawButtons();
 }
 
+std::string trim(std::string& str)
+{
+    size_t first = str.find_first_not_of(' ');
+    size_t last = str.find_last_not_of(' ');
+    return str.substr(first, (last - first + 1));
+}
+
+std::vector<std::string> splitString(std::string& str, char delim)
+{
+    size_t pos = 0;
+    std::string token;
+    std::vector<std::string> result;
+    while ((pos = str.find(delim)) != std::string::npos)
+    {
+        token = str.substr(0, pos);
+        result.push_back(trim(token));
+        str.erase(0, pos + 1);
+    }
+    token = str.substr(0, std::string::npos);
+    result.push_back(trim(token));
+    return result;
+}
+
+std::vector<std::pair<std::string, std::string>> readConfig()
+{
+    std::string line;
+
+    std::fstream MyReadFile("config.txt");
+
+    std::vector<std::pair<std::string, std::string>> vars;
+
+    while (std::getline(MyReadFile, line)) {
+        auto splitLine = splitString(line, '=');
+        vars.push_back(std::make_pair(splitLine[0], splitLine[1]));
+    }
+
+    MyReadFile.close();
+
+    return vars;
+}
+
 int main(int argc, char* argv[])
 {
-    int size = 4;
-    
+    auto configVars = readConfig();
+    int size = stoi(configVars[0].second);
+
     // TERMINAL
    /* Pos wumpusPos(1, 0);
     Pos goldPos(1, 1);
@@ -76,7 +119,6 @@ int main(int argc, char* argv[])
     }*/
 
     // WINDOW
-
     SDL_Window *window = nullptr;
     SDL_Renderer* renderer = nullptr;
 
@@ -101,7 +143,6 @@ int main(int argc, char* argv[])
 
     bool running = true;
     SDL_Event event;
-
     Grid grid(renderer, size);
     Button buttons(renderer);
 
@@ -127,6 +168,7 @@ int main(int argc, char* argv[])
 
     // clean
     grid.clean();
+    buttons.clean();
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
 
