@@ -20,11 +20,11 @@ void Grid::drawGrid()
 	Point curr;
 
 	Pos agentPos = solver.world.getAgentPos();
-	Pos goldPos = solver.world.findElement(gold);
-	Pos wumpusPos = solver.world.findElement(wumpus);
-	std::vector<Pos> pitsPos = solver.world.findMultipleElements(pit);
-	std::vector<Pos> stenchPos = solver.world.findMultipleElements(stench);
-	std::vector<Pos> breezePos = solver.world.findMultipleElements(breeze);
+	Pos goldPos = solver.world.findElement(Element::gold);
+	Pos wumpusPos = solver.world.findElement(Element::wumpus);
+	std::vector<Pos> pitsPos = solver.world.findMultipleElements(Element::pit);
+	std::vector<Pos> stenchPos = solver.world.findMultipleElements(Element::stench);
+	std::vector<Pos> breezePos = solver.world.findMultipleElements(Element::breeze);
 
 	int row = 0;
 	int col = 0;
@@ -83,21 +83,24 @@ void Grid::play()
 	std::cout << "inside play" << std::endl;
 	playOn = true;
 	Pos curr = solver.world.getAgentPos();
+	int count = 0;
 	for (const auto& pos : solver.pathTaken)
 	{
+		count++;
 		solver.world.moveAgent(curr, pos);
 		curr = pos;
 		std::cout << "forward" << std::endl;
 		SDL_Delay(100);
 	}
 
-	for (size_t i = solver.pathTaken.size() - 1; i >= 0; i--)
+	for (int i = count - 1; i >= 0; i--)
 	{
 		solver.world.moveAgent(curr, solver.pathTaken[i]);
 		curr = solver.pathTaken[i];
 		std::cout << "return" << std::endl;
 		SDL_Delay(100);
 	}
+
 	playOn = false;
 }
 
@@ -155,19 +158,19 @@ void Grid::addImage(const Point &p, int squareSize, const Element &elem)
 {
 	switch (elem)
 	{
-	case agent:
+	case Element::agent:
 		if (solver.world.hasArrow)
 			texture = SDL_CreateTextureFromSurface(renderer, agentArrowImage);
 		else
 			texture = SDL_CreateTextureFromSurface(renderer, agentImage);
 		break;
-	case gold:
+	case Element::gold:
 			texture = SDL_CreateTextureFromSurface(renderer, goldImage);
 			break;
-	case wumpus:
+	case Element::wumpus:
 		texture = SDL_CreateTextureFromSurface(renderer, wumpusImage);
 		break;
-	case pit:
+	case Element::pit:
 		texture = SDL_CreateTextureFromSurface(renderer, pitImage);
 		break;
 	}
@@ -204,7 +207,7 @@ void Grid::addElement(const SDL_Keycode &key, const Point &p)
 	else if (key == SDLK_p)
 	{
 		std::set<Element> cellContent = solver.world.getCell(cell);
-		if (cellContent.find(pit) == cellContent.end())
+		if (cellContent.find(Element::pit) == cellContent.end())
 			solver.world.addPit(cell);
 		else
 			solver.world.removePit(cell);

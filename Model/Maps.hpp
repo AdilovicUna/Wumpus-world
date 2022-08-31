@@ -3,7 +3,7 @@
 #include <map>
 #include <string>
 
-enum Element
+enum class Element
 {
     agent,
     gold,
@@ -12,16 +12,19 @@ enum Element
     stench,
     breeze
 };
-enum Layer
+enum class Layer
 {
     zero,
     object,
     percept
 };
 
-enum Move { unsafe, unknown, safe };
-
-
+enum class Move 
+{ 
+    unsafe, 
+    unknown, 
+    safe 
+};
 
 class Maps
 {

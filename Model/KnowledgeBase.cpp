@@ -17,7 +17,7 @@ void KnowledgeBase::tell(Pos &pos, std::set<Element> &info)
     visited[pos.row][pos.col] = true;
     for(const auto &elem: info)
     {
-        if(m.getLayer(elem) == percept)
+        if(m.getLayer(elem) == Layer::percept)
         {
             addElement(pos, elem);
         }
@@ -26,15 +26,15 @@ void KnowledgeBase::tell(Pos &pos, std::set<Element> &info)
 
 Move KnowledgeBase::ask(const Pos &curr, const Pos &next)
 {
-    Move result = unknown;
+    Move result = Move::unknown;
     if(grid[curr.row][curr.col].empty() ||
-        (!mightContainObject(next, stench) && !mightContainObject(next, breeze)))
+        (!mightContainObject(next, Element::stench) && !mightContainObject(next, Element::breeze)))
     {
-        result = safe;
+        result = Move::safe;
     }
-    else if(mightContainObject(next, stench) || mightContainObject(next, breeze))
+    else if(mightContainObject(next, Element::stench) || mightContainObject(next, Element::breeze))
     {
-        result = unsafe;
+        result = Move::unsafe;
     }
    
     return result;
@@ -47,7 +47,7 @@ bool KnowledgeBase::mightContainObject(const Pos &pos, const Element &percept) c
     int neighborCol[4] = {0, 0, -1, 1};
     for (int i = 0; i < 4; i++)
     {
-        // we are in the grid, we visited that cell and we know percept is not in that cell
+        // we are in the grid, we visited that cell and we know Layer::percept is not in that cell
         Pos newPos{ pos.row + neighborRow[i], pos.col + neighborCol[i] };
         if ((0 <= newPos.row && newPos.row < gridSize &&
             0 <= newPos.col && newPos.col < gridSize) &&
@@ -93,11 +93,11 @@ Pos KnowledgeBase::getWumpusPos()
         {
             for (const auto& elem : grid[i][j])
             {
-                if (elem == stench)
+                if (elem == Element::stench)
                 {
                     for (const auto& neighbor : getSecondNeighbors({ i, j }))
                     {
-                        if (perceptAtPos(neighbor, stench))
+                        if (perceptAtPos(neighbor, Element::stench))
                         {
                             if (i == neighbor.row)
                                 return { i, abs(j - neighbor.col) };

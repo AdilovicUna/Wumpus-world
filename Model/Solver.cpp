@@ -46,7 +46,7 @@ void Solver::helperSolve(Pos curr)
 
         for (auto neighbor : world.getNeighbors(curr))
         {
-            if (KB.ask(curr, neighbor) == safe)
+            if (KB.ask(curr, neighbor) == Move::safe)
             {
                 if (!done)
                     pathTaken.push_back(neighbor);
@@ -116,13 +116,13 @@ void Solver::helperSolve(Pos curr)
 
 bool Solver::isWinningPos(const std::set<Element> &cell) const
 {
-    return cell.find(gold) != cell.end();
+    return cell.find(Element::gold) != cell.end();
 }
 
 bool Solver::isLoosingPos(const std::set<Element> &cell) const
 {
-    return cell.find(wumpus) != cell.end() ||
-           cell.find(pit) != cell.end();
+    return cell.find(Element::wumpus) != cell.end() ||
+           cell.find(Element::pit) != cell.end();
 }
 
 void Solver::won()

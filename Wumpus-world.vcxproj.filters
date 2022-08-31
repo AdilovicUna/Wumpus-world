@@ -91,6 +91,7 @@
     <None Include="libwebp-7.dll" />
     <None Include="libtiff-5.dll" />
     <None Include="zlib1.dll" />
+    <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>
     <Font Include="View\Font\Lemon Love.ttf" />
