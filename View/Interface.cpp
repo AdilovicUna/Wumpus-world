@@ -1,7 +1,6 @@
-#include "Button.hpp"
-#include <iostream>
+#include "Interface.hpp"
 
-Button::Button(SDL_Renderer* &r) : renderer(r)
+Interface::Interface(SDL_Renderer* &r) : renderer(r)
 {
 	if (TTF_Init() == -1)
 		printf(TTF_GetError());
@@ -13,7 +12,7 @@ Button::Button(SDL_Renderer* &r) : renderer(r)
 		printf(TTF_GetError());
 }
 
-void Button::drawButton(const Point &p, int width, int height)
+void Interface::drawButton(const Point &p, int width, int height)
 {
 	// set the color
 	SDL_SetRenderDrawColor(renderer, outlineColor.r, outlineColor.g, outlineColor.b, outlineColor.a);
@@ -23,7 +22,7 @@ void Button::drawButton(const Point &p, int width, int height)
 	SDL_RenderDrawRect(renderer, &rect);
 }
 
-void Button::drawButtons()
+void Interface::drawButtons()
 {
 	if (!showHelp)
 	{
@@ -41,7 +40,7 @@ void Button::drawButtons()
 	}
 }
 
-void Button::displayHelp()
+void Interface::displayHelp()
 {
 	for (auto& line : helpText)
 	{
@@ -51,31 +50,27 @@ void Button::displayHelp()
 	helpTextPos = { 150, 150 };
 }
 
-void Button::drawTitle()
+void Interface::drawTitle()
 {
 	displayText(titlePos, titleWidth, titleHeight, bigFont, title);
 }
 
-void Button::displayText(const Point &p, int width, int height, TTF_Font* &font, const char* &text)
+void Interface::drawOutcome(const char* &outcome)
+{
+	displayText(outcomeTextPos, outcomeWidth, outcomeHeight, bigFont, outcome);
+}
+
+void Interface::displayText(const Point &p, int width, int height, TTF_Font* &font, const char* &text)
 {
 	surface = TTF_RenderText_Solid(font, text, outlineColor);
 	texture = SDL_CreateTextureFromSurface(renderer, surface);
 
-	//int textureWidth;
-	//int textureHeight;
-	//SDL_QueryTexture(texture, NULL, NULL, &textureWidth, &textureHeight);
-
 	rect = { p.x, p.y, width, height };
-
-	/*int textureStartRow = rect.y + 0.5 * (rect.h - textureHeight);
-	const int textureStartCol = rect.x + 0.5 * (rect.w - textureWidth);
-
-	rect = { textureStartCol, textureStartRow, textureWidth, textureHeight };*/
 
 	SDL_RenderCopy(renderer, texture, nullptr, &rect);
 }
 
-bool Button::isPlayButtonClicked(const Point &p)
+bool Interface::isPlayButtonClicked(const Point &p)
 {
 	if (!showHelp // cannot be clicked when help is open
 		&& p.x > playButton.x && p.x < playButton.x + playButtonWidth
@@ -86,7 +81,7 @@ bool Button::isPlayButtonClicked(const Point &p)
 	return false;
 }
 
-bool Button::isHelpButtonClicked(const Point &p)
+bool Interface::isHelpButtonClicked(const Point &p)
 {
 	if (!showHelp // cannot be clicked when help is open
 		&& p.x > helpButton.x && p.x < helpButton.x + helpButtonWidth
@@ -97,7 +92,7 @@ bool Button::isHelpButtonClicked(const Point &p)
 	return false;
 }
 
-bool Button::isExitHelpButtonClicked(const Point &p)
+bool Interface::isExitHelpButtonClicked(const Point &p)
 {
 	if ( showHelp // can only be clicked when help is open
 		&& p.x > exitHelpButton.x && p.x < exitHelpButton.x + exitHelpButtonWidth
@@ -108,17 +103,17 @@ bool Button::isExitHelpButtonClicked(const Point &p)
 	return false;
 }
 
-void Button::openHelp()
+void Interface::openHelp()
 {
 	showHelp = true;
 }
 
-void Button::closeHelp()
+void Interface::closeHelp()
 {
 	showHelp = false;
 }
 
-void Button::clean()
+void Interface::clean()
 {
 	SDL_DestroyRenderer(renderer);
 	SDL_FreeSurface(surface);

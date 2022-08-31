@@ -11,8 +11,6 @@ private:
 
     bool done = false;
 
-    bool goldFound = false;
-
     // checks if agent is in the same cell as the gold
     bool isWinningPos(const std::set<Element> &cell) const;
 
@@ -27,9 +25,12 @@ private:
     
     void helperSolve(Pos curr);
 
+    std::vector<std::vector<bool>> passed;
+
 public:
     WumpusWorld world;
     std::vector<Pos> pathTaken;
+    bool goldFound = false;
 
     Solver(WumpusWorld w);
     void solve();

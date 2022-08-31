@@ -2,7 +2,7 @@
 Using a knowladge based agent to solve [Wumpus-world](https://www.javatpoint.com/the-wumpus-world-in-artificial-intelligence) problem
 
 ## How to use the program?
-- In the config.txt file the user can pick a size of the grid that will be displayed (note: default size is 5 and minimum size is 2)
+- In the config.txt file the user can pick a size of the grid that will be displayed (note: default size is 5 and minimum size is 3)
 - To select a square double click it
 - To move wumpus select a square and press 'w' on the keyboard
 - To move gold select a square and press 'g' on the keyboard

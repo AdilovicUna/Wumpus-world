@@ -33,7 +33,7 @@
     <ClCompile Include="View\Point.hpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="View\Button.cpp">
+    <ClCompile Include="View\Interface.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Model\Maps.cpp">
@@ -56,7 +56,7 @@
     <ClInclude Include="View\Grid.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="View\Button.hpp">
+    <ClInclude Include="View\Interface.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Model\Maps.hpp">

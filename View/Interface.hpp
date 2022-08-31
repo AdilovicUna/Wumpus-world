@@ -6,7 +6,7 @@
 #include "SDL_ttf.h"
 #include <vector>
 
-class Button
+class Interface
 {
 private:
 	SDL_Renderer* renderer = nullptr;
@@ -35,6 +35,10 @@ private:
 	const char* helpButtonText = "?";
 	const char* backButtonText = "Back";
 
+	// outcome
+	int outcomeHeight = 100;
+	int outcomeWidth = 300;
+	Point outcomeTextPos = { 250, 650 + 20 };
 
 	// help text
 	int helpHeight = 500 / 7;
@@ -64,13 +68,17 @@ private:
 public:
 	bool showHelp = false;
 
-	Button(SDL_Renderer* &r);
+	Interface(SDL_Renderer* &r);
 
 	// draws the buttons     
 	void drawButtons();
 
 	// displays the title
 	void drawTitle();
+
+	// displays the outcome
+	void drawOutcome(const char*& outcome);
+
 
 	// check button clicks
 	bool isPlayButtonClicked(const Point &p);

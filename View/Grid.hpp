@@ -55,6 +55,8 @@ public:
 
 	// currently playing the simulation
 	bool playOn = false;
+	bool showOutcome = false;
+	const char* outcome;
 
 	Grid(SDL_Renderer* &r, int n);
 

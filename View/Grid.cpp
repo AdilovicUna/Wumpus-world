@@ -87,14 +87,22 @@ void Grid::play()
 void Grid::playNext()
 {
 	currPlayPos += 1;
-	if (solver.pathTaken.size() <= currPlayPos)
+
+	if (solver.pathTaken.size() == currPlayPos)
+	{
+		showOutcome = true;
+		outcome = solver.goldFound ? "Successful!" : "Unsuccessful :(";
+	}
+	else if (solver.pathTaken.size() < currPlayPos)
 	{
 		playOn = false; // we are done
+		showOutcome = false;
+		solver = Solver(WumpusWorld(size));
 	}
 	else
 	{
 		// remove gold if we came to it
-		auto cell = solver.world.getCell(solver.pathTaken[currPlayPos]);
+		std::set<Element> cell = solver.world.getCell(solver.pathTaken[currPlayPos]);
 		if (cell.find(Element::gold) != cell.end())
 		{
 			solver.world.removeGold();
@@ -212,7 +220,6 @@ void Grid::addElement(const SDL_Keycode &key, const Point &p)
 		else
 			solver.world.removePit(cell);
 	}
-	solver.world.printGrid();
 }
 
 Pos Grid::getCell(const Point &p) const

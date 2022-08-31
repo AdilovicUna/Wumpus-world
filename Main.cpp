@@ -1,19 +1,19 @@
 #include "View/Grid.hpp"
-#include "View/Button.hpp"
+#include "View/Interface.hpp"
 #include <fstream>
 
 //NOTE: height = row, width = col
 
-void mouseEventHandler(SDL_Event event, Grid& grid, Button& buttons, Point cursorPos)
+void mouseEventHandler(SDL_Event event, Grid& grid, Interface& interface, Point cursorPos)
 {
     if (grid.playOn)
         return;
 
-    if (buttons.isHelpButtonClicked(cursorPos)) // check if we clicked help button
-        buttons.openHelp();
-    else if (buttons.isExitHelpButtonClicked(cursorPos)) // check if we clicked exit help button
-        buttons.closeHelp();
-    else if (buttons.isPlayButtonClicked(cursorPos)) // check if we clicked play button
+    if (interface.isHelpButtonClicked(cursorPos)) // check if we clicked help button
+        interface.openHelp();
+    else if (interface.isExitHelpButtonClicked(cursorPos)) // check if we clicked exit help button
+        interface.closeHelp();
+    else if (interface.isPlayButtonClicked(cursorPos)) // check if we clicked play button
     {
         grid.solver.solve();
         grid.play();
@@ -22,7 +22,7 @@ void mouseEventHandler(SDL_Event event, Grid& grid, Button& buttons, Point curso
         grid.selectSquare(cursorPos);
 }
 
-bool eventHandler(SDL_Event event, Grid& grid, Button& buttons)
+bool eventHandler(SDL_Event event, Grid& grid, Interface& interface)
 {
     if (event.type == SDL_QUIT) // x clicked
     {
@@ -30,7 +30,7 @@ bool eventHandler(SDL_Event event, Grid& grid, Button& buttons)
     }
     else if (event.type == SDL_MOUSEBUTTONDOWN) // mouse click
     {
-        mouseEventHandler(event, grid, buttons, { event.button.x, event.button.y });
+        mouseEventHandler(event, grid, interface, { event.button.x, event.button.y });
     }
     else if (event.type == SDL_KEYDOWN)
     {
@@ -40,15 +40,18 @@ bool eventHandler(SDL_Event event, Grid& grid, Button& buttons)
     return true;
 }
 
-void draw(Grid& grid, Button& buttons)
+void draw(Grid& grid, Interface& interface)
 {
-    buttons.drawTitle();
+    interface.drawTitle();
 
-    if (!buttons.showHelp)
+    if (!interface.showHelp)
         grid.drawGrid();
 
-    if(!grid.playOn)
-        buttons.drawButtons();
+    if (!grid.playOn)
+        interface.drawButtons();
+
+    if (grid.showOutcome)
+        interface.drawOutcome(grid.outcome);
 }
 
 std::string trim(std::string& str)
@@ -96,15 +99,14 @@ std::vector<std::pair<std::string, std::string>> readConfig()
     {
         return vars;
     }
-   
 }
 
 int convert(std::string gridSize)
 {
     try
     {
-        // minimum grid size is 2x2
-        return stoi(gridSize) >= 2 ? stoi(gridSize) : 5;
+        // minimum grid size is 3x3
+        return stoi(gridSize) >= 3 ? stoi(gridSize) : 5;
     }
     catch(...)
     {
@@ -112,112 +114,124 @@ int convert(std::string gridSize)
     }
 }
 
+
 int main(int argc, char* argv[])
 {
+    bool terminal = false;
+
     auto configVars = readConfig();
     int size = 5;
     if(!configVars.empty() && configVars[0].first == "grid_size")
          size = convert(configVars[0].second);
 
     // TERMINAL
-    /*Pos wumpusPos{1, 0};
-    Pos goldPos{ 1, 1 };
-    std::vector<Pos> pitPos = { {0, 3}, {1, 2}, {3, 2} };
-
-    try
+    if (terminal)
     {
-        WumpusWorld world(size);
-        world.addWumpus(wumpusPos);
-        world.addGold(goldPos);
-        for (const auto& pit : pitPos)
+        Pos wumpusPos{ 1, 0 };
+        Pos goldPos{ 1, 1 };
+        std::vector<Pos> pitPos = { {0, 3}, {1, 2}, {3, 2} };
+
+        try
         {
-            world.addPit(pit);
-        }
-        Solver s(world);
-        s.solve();
-        for (const auto& node : s.pathTaken)
-        {
-            std::cout << "(" << node.row << " " << node.col << ") ";
-        }
-        std::cout << "end" << std::endl;
-    }
-    catch (const std::exception& e)
-    {
-        std::cerr << "Invalid object placement" << '\n';
-    }*/
-
-    // WINDOW
-    SDL_Window* window = nullptr;
-    SDL_Renderer* renderer = nullptr;
-
-    SDL_Init(SDL_INIT_VIDEO);
-
-    window = SDL_CreateWindow(
-        "Wumpus-world",
-        SDL_WINDOWPOS_UNDEFINED,
-        SDL_WINDOWPOS_UNDEFINED,
-        800,
-        800,
-        SDL_WINDOW_OPENGL
-    );
-
-    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-
-    // Check that the window was successfully created
-    if (window == NULL) {
-        printf("Could not create window: %s\n", SDL_GetError());
-        return 1;
-    }
-
-    bool running = true;
-    SDL_Event event;
-    Grid grid(renderer, size);
-    Button buttons(renderer);
-
-    unsigned int lastTime = 0;
-    unsigned int currentTime = 0;
-
-    // keep redrawing everything
-    while (running)
-    {
-        while (SDL_PollEvent(&event) != 0)
-        {
-            if (!eventHandler(event, grid, buttons))
-                running = false;
-        }
-
-        // clear
-        SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE); // set background color to black
-        SDL_RenderClear(renderer);
-
-
-        currentTime = SDL_GetTicks();
-
-        // draw
-        if (grid.playOn)
-        {
-            // show next step after a second
-            if (currentTime > lastTime + 1000) {
-                grid.playNext();
-                lastTime = currentTime;
+            WumpusWorld world(size);
+            world.addWumpus(wumpusPos);
+            world.addGold(goldPos);
+            for (const auto& pit : pitPos)
+            {
+                world.addPit(pit);
             }
+            Solver s(world);
+            s.solve();
+            world.printGrid();
+            std::cout << "path taken: ";
+
+            for (const auto& node : s.pathTaken)
+            {
+                std::cout << "(" << node.row << " " << node.col << ") ";
+            }
+            std::string outcome = s.goldFound ? "successful" : "unsuccessful";
+            std::cout << outcome << std::endl;
+        }
+        catch (const std::exception& e)
+        {
+            std::cerr << "Invalid object placement" << '\n';
+        }
+    }
+    else
+    {
+        // WINDOW
+        SDL_Window* window = nullptr;
+        SDL_Renderer* renderer = nullptr;
+
+        SDL_Init(SDL_INIT_VIDEO);
+
+        window = SDL_CreateWindow(
+            "Wumpus-world",
+            SDL_WINDOWPOS_UNDEFINED,
+            SDL_WINDOWPOS_UNDEFINED,
+            800,
+            800,
+            SDL_WINDOW_OPENGL
+        );
+
+        renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+
+        // Check that the window was successfully created
+        if (window == NULL) {
+            printf("Could not create window: %s\n", SDL_GetError());
+            return 1;
         }
 
-        draw(grid, buttons);
+        bool running = true;
+        SDL_Event event;
+        Grid grid(renderer, size);
+        Interface interface(renderer);
 
-        // show
-        SDL_RenderPresent(renderer);
+        unsigned int lastTime = 0;
+        unsigned int currentTime = 0;
 
-        SDL_Delay(10);
+        // keep redrawing everything
+        while (running)
+        {
+            while (SDL_PollEvent(&event) != 0)
+            {
+                if (!eventHandler(event, grid, interface))
+                    running = false;
+            }
+
+            // clear
+            SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE); // set background color to black
+            SDL_RenderClear(renderer);
+
+
+            currentTime = SDL_GetTicks();
+
+            // draw
+            if (grid.playOn)
+            {
+                // show next step after a second
+                if (currentTime > lastTime + 1000) {
+                    grid.playNext();
+                    lastTime = currentTime;
+                }
+            }
+
+            draw(grid, interface);
+
+            // show
+            SDL_RenderPresent(renderer);
+
+            SDL_Delay(10);
+        }
+
+        // clean
+        grid.clean();
+        interface.clean();
+        SDL_DestroyRenderer(renderer);
+        SDL_DestroyWindow(window);
+
+        SDL_Quit();
     }
-
-    // clean
-    grid.clean();
-    buttons.clean();
-    SDL_DestroyRenderer(renderer);
-    SDL_DestroyWindow(window);
-
-    SDL_Quit();
-
+    
     return 0;
 }
