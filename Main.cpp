@@ -83,19 +83,26 @@ std::vector<std::string> splitString(std::string& str, char delim)
 std::vector<std::pair<std::string, std::string>> readConfig()
 {
     std::string line;
-
-    std::fstream MyReadFile("config.txt");
-
     std::vector<std::pair<std::string, std::string>> vars;
 
-    while (std::getline(MyReadFile, line)) {
-        auto splitLine = splitString(line, '=');
-        vars.push_back(std::make_pair(splitLine[0], splitLine[1]));
+    try
+    {
+        std::fstream MyReadFile("config.txt");
+
+        while (std::getline(MyReadFile, line)) {
+            auto splitLine = splitString(line, '=');
+            vars.push_back(std::make_pair(splitLine[0], splitLine[1]));
+        }
+
+        MyReadFile.close();
+
+        return vars;
     }
-
-    MyReadFile.close();
-
-    return vars;
+    catch (...)
+    {
+        return vars;
+    }
+   
 }
 
 int convert(std::string gridSize)

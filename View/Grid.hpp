@@ -46,7 +46,7 @@ private:
 	// checks if any elements are at this square
 	bool checkIfElementOnPos(const std::vector<Pos>& elements, int row, int col) const;
 
-	int currPlayPos = ;
+	int currPlayPos = -1;
 
 public:
 	Solver solver;
