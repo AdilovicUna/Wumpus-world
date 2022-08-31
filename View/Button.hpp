@@ -41,7 +41,7 @@ private:
 	int helpWidth = 500;
 	Point helpTextPos = { 150, 150 };
 	std::vector<const char*> helpText{
-		"To add and/or move objects",
+		"To move or add objects",
 		"double click a cell",
 		"and press one of the following keys:",
 		"            w - wumpus            ",
