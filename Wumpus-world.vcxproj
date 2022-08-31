@@ -147,6 +147,7 @@
       <LanguageStandard Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">stdcpp17</LanguageStandard>
     </ClCompile>
     <ClCompile Include="Model\KnowledgeBase.cpp" />
+    <ClCompile Include="Model\Maps.cpp" />
     <ClCompile Include="Model\Solver.cpp" />
     <ClCompile Include="Model\WumpusWorld.cpp" />
     <ClCompile Include="View\Button.cpp" />
@@ -155,6 +156,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Model\KnowledgeBase.hpp" />
+    <ClInclude Include="Model\Maps.hpp" />
     <ClInclude Include="Model\Pos.hpp" />
     <ClInclude Include="Model\Solver.hpp" />
     <ClInclude Include="Model\WumpusWorld.hpp" />

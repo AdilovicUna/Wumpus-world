@@ -2,13 +2,9 @@
 
 #include "WumpusWorld.hpp"
 
-enum Move {unsafe, unknown, safe};
-
-// used to make console printing more readable
-inline std::map<Move, std::string> getMoveName = {{Move::unsafe, "unsafe"}, {Move::unknown, "unknown"}, {Move::safe, "safe"}};
-
 class KnowledgeBase
 {
+private:
     int gridSize;
 
     std::vector<std::vector<std::set<Element>>> grid;
@@ -28,6 +24,8 @@ class KnowledgeBase
     std::vector<Pos> getSecondNeighbors(const Pos& pos) const;
 
 public:
+    Maps m;
+
     // keeps track of explored cells
     std::vector<std::vector<bool>> visited;
 

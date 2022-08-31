@@ -3,32 +3,9 @@
 #include <iostream>
 #include <vector>
 #include <set>
-#include <map>
 #include <string>
 #include "Pos.hpp"
-
-enum Element
-{
-    agent,
-    gold,
-    wumpus,
-    pit,
-    stench,
-    breeze
-};
-enum Layer  
-{
-    zero,
-    object,
-    percept
-};
-
-// NOTE: every cell in the grid can have at most one object but many percepts
-// zero layer is reserved for the agent as they can be part of any cell
-inline std::map<Element, Layer> getLayer = {{Element::agent, Layer::zero}, {Element::gold, Layer::object}, {Element::wumpus, Layer::object}, {Element::pit, Layer::object}, {Element::stench, Layer::percept}, {Element::breeze, Layer::percept}};
-
-// used to make console printing more readable
-inline std::map<Element, std::string> getElementName = {{Element::agent, "a"}, {Element::gold, "g"}, {Element::wumpus, "w"}, {Element::pit, "p"}, {Element::stench, "s"}, {Element::breeze, "b"}};
+#include "Maps.hpp"
 
 class WumpusWorld
 {
@@ -50,8 +27,9 @@ private:
     // check if cell has any element in object layer
     bool hasObject(const std::set<Element> &cell) const;
 
-
 public:
+    Maps m;
+
     bool hasArrow = true;
 
     WumpusWorld(int n);

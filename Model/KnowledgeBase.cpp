@@ -17,7 +17,7 @@ void KnowledgeBase::tell(Pos &pos, std::set<Element> &info)
     visited[pos.row][pos.col] = true;
     for(const auto &elem: info)
     {
-        if(getLayer[elem] == percept)
+        if(m.getLayer(elem) == percept)
         {
             addElement(pos, elem);
         }

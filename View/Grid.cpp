@@ -91,7 +91,7 @@ void Grid::play()
 		SDL_Delay(100);
 	}
 
-	for (int i = solver.pathTaken.size() - 1; i >= 0; i--)
+	for (size_t i = solver.pathTaken.size() - 1; i >= 0; i--)
 	{
 		solver.world.moveAgent(curr, solver.pathTaken[i]);
 		curr = solver.pathTaken[i];

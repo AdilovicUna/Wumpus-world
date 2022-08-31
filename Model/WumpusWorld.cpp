@@ -57,7 +57,7 @@ void WumpusWorld::addGold(const Pos &goldPos)
 bool WumpusWorld::addElement(const Pos& pos, const Element &elem)
 {
     // if we try to add more than 1 object at the same pos
-    if (getLayer[elem] == object &&
+    if (m.getLayer(elem) == object &&
         (hasObject(grid[pos.row][pos.col]) || 
         (pos.row == size - 1 && pos.col == 0)))
     {
@@ -133,7 +133,7 @@ bool WumpusWorld::hasObject(const std::set<Element> &cell) const
 {
     for (const auto &elem : cell)
     {
-        if (getLayer[elem] == object)
+        if (m.getLayer(elem) == object)
         {
             return true;
         }
@@ -188,7 +188,7 @@ void WumpusWorld::printGrid() const
             std::cout << "( ";
             for (const auto &elem : col)
             {
-                std::cout << getElementName[elem] << " ";
+                std::cout << m.getElementName(elem) << " ";
             }
             std::cout << ") ";
         }
