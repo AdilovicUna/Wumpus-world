@@ -6,8 +6,8 @@
 
 void mouseEventHandler(SDL_Event event, Grid& grid, Button& buttons, Point cursorPos)
 {
-    if (grid.playOn)
-        return;
+    /*if (grid.playOn)
+        return;*/
 
     if (buttons.isHelpButtonClicked(cursorPos)) // check if we clicked help button
         buttons.openHelp();
@@ -15,8 +15,9 @@ void mouseEventHandler(SDL_Event event, Grid& grid, Button& buttons, Point curso
         buttons.closeHelp();
     else if (buttons.isPlayButtonClicked(cursorPos)) // check if we clicked play button
     {
-        grid.solver.solve();
-        grid.play();
+        std::cout << "play" << std::endl;
+        //grid.solver.solve();
+        //grid.play();
     }
     else if (event.button.clicks == 2) // check if it was a double click
         grid.selectSquare(cursorPos);
