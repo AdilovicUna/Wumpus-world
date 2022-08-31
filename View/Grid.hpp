@@ -46,6 +46,8 @@ private:
 	// checks if any elements are at this square
 	bool checkIfElementOnPos(const std::vector<Pos>& elements, int row, int col) const;
 
+	int currPlayPos = ;
+
 public:
 	Solver solver;
 
@@ -59,7 +61,11 @@ public:
 	void drawGrid();
 	void selectSquare(const Point &p);
 	void addElement(const SDL_Keycode &key, const Point &p);
+
+	// play button pressed
 	void play();
+	// make next step in play
+	void playNext();
 
 	Pos getCell(const Point &p) const;
 

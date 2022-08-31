@@ -80,28 +80,28 @@ void Grid::drawGrid()
 
 void Grid::play()
 {
-	std::cout << "inside play" << std::endl;
 	playOn = true;
-	Pos curr = solver.world.getAgentPos();
-	int count = 0;
-	for (const auto& pos : solver.pathTaken)
-	{
-		count++;
-		solver.world.moveAgent(curr, pos);
-		curr = pos;
-		std::cout << "forward" << std::endl;
-		SDL_Delay(100);
-	}
+	currPlayPos = -1;
+}
 
-	for (int i = count - 1; i >= 0; i--)
+void Grid::playNext()
+{
+	currPlayPos += 1;
+	if (solver.pathTaken.size() <= currPlayPos)
 	{
-		solver.world.moveAgent(curr, solver.pathTaken[i]);
-		curr = solver.pathTaken[i];
-		std::cout << "return" << std::endl;
-		SDL_Delay(100);
+		playOn = false; // we are done
 	}
+	else
+	{
+		// remove gold if we came to it
+		auto cell = solver.world.getCell(solver.pathTaken[currPlayPos]);
+		if (cell.find(Element::gold) != cell.end())
+		{
+			solver.world.removeGold();
+		}
 
-	playOn = false;
+		solver.world.moveAgent(solver.world.getAgentPos(), solver.pathTaken[currPlayPos]);
+	}
 }
 
 bool Grid::checkIfElementOnPos(const std::vector<Pos> &elements, int row, int col) const

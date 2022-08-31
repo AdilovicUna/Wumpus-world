@@ -6,6 +6,9 @@ class Solver
 {
 private:
     KnowledgeBase KB;
+
+    Pos agentStartingPos;
+
     bool done = false;
 
     bool goldFound = false;

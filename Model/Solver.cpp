@@ -1,6 +1,6 @@
 #include "Solver.hpp"
 
-Solver::Solver(WumpusWorld w) : world(w), KB(w.getSize())
+Solver::Solver(WumpusWorld w) : world(w), KB(w.getSize()), agentStartingPos({ w.getSize() - 1, 0 })
 {
 }
 
@@ -128,6 +128,23 @@ bool Solver::isLoosingPos(const std::set<Element> &cell) const
 void Solver::won()
 {
     goldFound = true;
+
+    std::vector<Pos> temp;
+    for (const auto &pos : pathTaken)
+    {
+        temp.push_back(pos);
+    }
+
+    // add reversed pathTaken as well (go back to initial pos)
+    for (int i = pathTaken.size() - 2; i >= 0; i--)
+    {
+        temp.push_back(pathTaken[i]);
+
+        if (agentStartingPos.row == pathTaken[i].row && agentStartingPos.col == pathTaken[i].col)
+            break;
+    }
+    pathTaken = temp;
+
     std::cout << "won" << std::endl;
 }
 

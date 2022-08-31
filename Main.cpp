@@ -6,8 +6,8 @@
 
 void mouseEventHandler(SDL_Event event, Grid& grid, Button& buttons, Point cursorPos)
 {
-    /*if (grid.playOn)
-        return;*/
+    if (grid.playOn)
+        return;
 
     if (buttons.isHelpButtonClicked(cursorPos)) // check if we clicked help button
         buttons.openHelp();
@@ -16,8 +16,13 @@ void mouseEventHandler(SDL_Event event, Grid& grid, Button& buttons, Point curso
     else if (buttons.isPlayButtonClicked(cursorPos)) // check if we clicked play button
     {
         std::cout << "play" << std::endl;
-        //grid.solver.solve();
-        //grid.play();
+        grid.solver.solve();
+        for (const auto& node : grid.solver.pathTaken)
+        {
+            std::cout << "(" << node.row << " " << node.col << ") ";
+        }
+        std::cout << "end" << std::endl;
+        grid.play();
     }
     else if (event.button.clicks == 2) // check if it was a double click
         grid.selectSquare(cursorPos);
@@ -46,11 +51,10 @@ void draw(Grid& grid, Button& buttons)
     buttons.drawTitle();
 
     if (!buttons.showHelp)
-    {
         grid.drawGrid();
-    }
 
-    buttons.drawButtons();
+    if(!grid.playOn)
+        buttons.drawButtons();
 }
 
 std::string trim(std::string& str)
@@ -114,8 +118,8 @@ int main(int argc, char* argv[])
          size = convert(configVars[0].second);
 
     // TERMINAL
-    /*Pos wumpusPos(1, 0);
-    Pos goldPos(1, 1);
+    /*Pos wumpusPos{1, 0};
+    Pos goldPos{ 1, 1 };
     std::vector<Pos> pitPos = { {0, 3}, {1, 2}, {3, 2} };
 
     try
@@ -131,7 +135,7 @@ int main(int argc, char* argv[])
         s.solve();
         for (const auto& node : s.pathTaken)
         {
-            std::cout << "(" << node.getRow() << " " << node.getCol() << ") ";
+            std::cout << "(" << node.row << " " << node.col << ") ";
         }
         std::cout << "end" << std::endl;
     }
@@ -168,6 +172,9 @@ int main(int argc, char* argv[])
     Grid grid(renderer, size);
     Button buttons(renderer);
 
+    unsigned int lastTime = 0;
+    unsigned int currentTime = 0;
+
     // keep redrawing everything
     while (running)
     {
@@ -181,7 +188,19 @@ int main(int argc, char* argv[])
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE); // set background color to black
         SDL_RenderClear(renderer);
 
+
+        currentTime = SDL_GetTicks();
+
         // draw
+        if (grid.playOn)
+        {
+            // show next step after a second
+            if (currentTime > lastTime + 1000) {
+                grid.playNext();
+                lastTime = currentTime;
+            }
+        }
+
         draw(grid, buttons);
 
         // show
