@@ -94,10 +94,24 @@ std::vector<std::pair<std::string, std::string>> readConfig()
     return vars;
 }
 
+int convert(std::string gridSize)
+{
+    try
+    {
+        return stoi(gridSize);
+    }
+    catch(...)
+    {
+        return 5;
+    }
+}
+
 int main(int argc, char* argv[])
 {
     auto configVars = readConfig();
-    int size = stoi(configVars[0].second);
+    int size = 5;
+    if(!configVars.empty() && configVars[0].first == "grid_size")
+         size = convert(configVars[0].second);
 
     // TERMINAL
     /*Pos wumpusPos(1, 0);
