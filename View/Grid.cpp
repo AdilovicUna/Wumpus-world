@@ -54,15 +54,15 @@ void Grid::drawGrid()
 
 			// IMAGES
 			// draw agent
-			if (agentPos.getRow() == row && agentPos.getCol() == col)
+			if (agentPos.row == row && agentPos.col == col)
 				addImage(curr, squareSize, Element::agent);
 
 			// draw gold
-			else if (goldPos.getRow() == row && goldPos.getCol() == col)
+			else if (goldPos.row == row && goldPos.col == col)
 				addImage(curr, squareSize, Element::gold);
 
 			// draw wumpus
-			else if (wumpusPos.getRow() == row && wumpusPos.getCol() == col)
+			else if (wumpusPos.row == row && wumpusPos.col == col)
 				addImage(curr, squareSize, Element::wumpus);
 
 			// draw pits
@@ -105,7 +105,7 @@ bool Grid::checkIfElementOnPos(const std::vector<Pos> &elements, int row, int co
 {
 	for (const auto& elemPos : elements)
 	{
-		if (elemPos.getRow() == row && elemPos.getCol() == col)
+		if (elemPos.row == row && elemPos.col == col)
 		{
 			return true;
 		}

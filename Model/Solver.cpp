@@ -58,7 +58,7 @@ void Solver::helperSolve(Pos curr)
 
         // agent has 1 arrow per game to try and shoot the wumpus down
         Pos wumpusPos = KB.getWumpusPos();
-        if (world.hasArrow && wumpusPos.getRow() != -1)
+        if (world.hasArrow && wumpusPos.row != -1)
         {
             world.shoot(wumpusPos);
         }

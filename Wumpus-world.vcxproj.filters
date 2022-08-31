@@ -21,9 +21,6 @@
     <ClCompile Include="Model\KnowledgeBase.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Model\Pos.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Model\Solver.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

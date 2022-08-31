@@ -147,7 +147,6 @@
       <LanguageStandard Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">stdcpp17</LanguageStandard>
     </ClCompile>
     <ClCompile Include="Model\KnowledgeBase.cpp" />
-    <ClCompile Include="Model\Pos.cpp" />
     <ClCompile Include="Model\Solver.cpp" />
     <ClCompile Include="Model\WumpusWorld.cpp" />
     <ClCompile Include="View\Button.cpp" />

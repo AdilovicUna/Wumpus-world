@@ -10,7 +10,7 @@ WumpusWorld::WumpusWorld(int n)
 
 void WumpusWorld::addWumpus(const Pos &wumpusPos)
 {
-    if (wumpusPos.getRow() == -1)
+    if (wumpusPos.row == -1)
     {
         return;
     }
@@ -28,7 +28,7 @@ void WumpusWorld::addWumpus(const Pos &wumpusPos)
 
 void WumpusWorld::addPit(const Pos &pitPos)
 {
-    if (pitPos.getRow() == -1)
+    if (pitPos.row == -1)
     {
         return;
     }
@@ -45,7 +45,7 @@ void WumpusWorld::addPit(const Pos &pitPos)
 
 void WumpusWorld::addGold(const Pos &goldPos)
 {
-    if (goldPos.getRow() == -1)
+    if (goldPos.row == -1)
     {
         return;
     }
@@ -58,12 +58,12 @@ bool WumpusWorld::addElement(const Pos& pos, const Element &elem)
 {
     // if we try to add more than 1 object at the same pos
     if (getLayer[elem] == object &&
-        (hasObject(grid[pos.getRow()][pos.getCol()]) || 
-        (pos.getRow() == size - 1 && pos.getCol() == 0)))
+        (hasObject(grid[pos.row][pos.col]) || 
+        (pos.row == size - 1 && pos.col == 0)))
     {
         return false;
     }
-    grid[pos.getRow()][pos.getCol()].insert(elem);
+    grid[pos.row][pos.col].insert(elem);
 
     return true;
 }
@@ -71,7 +71,7 @@ bool WumpusWorld::addElement(const Pos& pos, const Element &elem)
 void WumpusWorld::removeWumpus()
 {
     Pos wumpusPos = findElement(wumpus);
-    if (wumpusPos.getRow() == -1)
+    if (wumpusPos.row == -1)
     {
         return;
     }
@@ -99,7 +99,7 @@ void WumpusWorld::removePit(const Pos &pitPos)
 void WumpusWorld::removeGold()
 {
     Pos goldPos = findElement(gold);
-    if (goldPos.getRow() == -1)
+    if (goldPos.row == -1)
     {
         return;
     }
@@ -109,7 +109,7 @@ void WumpusWorld::removeGold()
 
 void WumpusWorld::removeElement(const Pos &pos, const Element &elem)
 {
-    grid[pos.getRow()][pos.getCol()].erase(elem);
+    grid[pos.row][pos.col].erase(elem);
 }
 
 std::vector<Pos> WumpusWorld::getNeighbors(const Pos &pos) const
@@ -119,9 +119,9 @@ std::vector<Pos> WumpusWorld::getNeighbors(const Pos &pos) const
     int neighborCol[4] = {0, 0, -1, 1};
     for (int i = 0; i < 4; i++)
     {
-        Pos newPos(pos.getRow() + neighborRow[i], pos.getCol() + neighborCol[i]);
-        if (0 <= newPos.getRow() && newPos.getRow() < size &&
-            0 <= newPos.getCol() && newPos.getCol() < size)
+        Pos newPos{ pos.row + neighborRow[i], pos.col + neighborCol[i] };
+        if (0 <= newPos.row && newPos.row < size &&
+            0 <= newPos.col && newPos.col < size)
         {
             result.push_back(newPos);
         }
@@ -199,7 +199,7 @@ void WumpusWorld::printGrid() const
 
 const std::set<Element> &WumpusWorld::getCell(const Pos &pos) const
 {
-    return grid[pos.getRow()][pos.getCol()];
+    return grid[pos.row][pos.col];
 }
 
 int WumpusWorld::getSize() const
@@ -215,15 +215,15 @@ Pos WumpusWorld::getAgentPos() const
 void WumpusWorld::shoot(const Pos& possibleWumpusPos)
 {
     hasArrow = false;
-    auto temp = grid[possibleWumpusPos.getRow()][possibleWumpusPos.getCol()];
+    auto temp = grid[possibleWumpusPos.row][possibleWumpusPos.col];
     if (temp.find(wumpus) != temp.end())
         removeWumpus();
 }
 
 void WumpusWorld::moveAgent(const Pos& prevPos, const Pos& newPos)
 {
-    auto iter = grid[agentPos.getRow()][agentPos.getCol()].find(agent);
-    grid[agentPos.getRow()][agentPos.getCol()].erase(iter);
-    grid[newPos.getRow()][newPos.getCol()].insert(agent);
+    auto iter = grid[agentPos.row][agentPos.col].find(agent);
+    grid[agentPos.row][agentPos.col].erase(iter);
+    grid[newPos.row][newPos.col].insert(agent);
     agentPos = newPos;
 }

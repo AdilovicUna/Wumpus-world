@@ -1,16 +1,7 @@
 #pragma once
 
-#include <utility>
-#include <vector>
-
-class Pos
+struct Pos
 {
-private:
-	std::pair<int, int> pos;
-
-public:
-	Pos(int, int);
-
-	int getRow() const;
-	int getCol() const;
+	int row;
+	int col;
 };
