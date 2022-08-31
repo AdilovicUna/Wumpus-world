@@ -6,6 +6,16 @@ WumpusWorld::WumpusWorld(int n)
     // agent can only start at the bottom left corner
     Pos agentPos = { n - 1 , 0 };
     addElement(agentPos, Element::agent);
+
+    // Note: smallest grid is of size 2 so the following positions are guaranteed to exist
+
+    // initial pos of wumpus is upper left corner
+    Pos wumpusPos = { 0 , 0 };
+    addWumpus(wumpusPos);
+
+    // initial pos of wumpus is next to wumpus
+    Pos goldPos = { 0 , 1 };
+    addGold(goldPos);
 }
 
 void WumpusWorld::addWumpus(const Pos &wumpusPos)

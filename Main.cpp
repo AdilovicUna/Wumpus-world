@@ -15,13 +15,7 @@ void mouseEventHandler(SDL_Event event, Grid& grid, Button& buttons, Point curso
         buttons.closeHelp();
     else if (buttons.isPlayButtonClicked(cursorPos)) // check if we clicked play button
     {
-        std::cout << "play" << std::endl;
         grid.solver.solve();
-        for (const auto& node : grid.solver.pathTaken)
-        {
-            std::cout << "(" << node.row << " " << node.col << ") ";
-        }
-        std::cout << "end" << std::endl;
         grid.play();
     }
     else if (event.button.clicks == 2) // check if it was a double click
@@ -109,7 +103,8 @@ int convert(std::string gridSize)
 {
     try
     {
-        return stoi(gridSize);
+        // minimum grid size is 2x2
+        return stoi(gridSize) >= 2 ? stoi(gridSize) : 5;
     }
     catch(...)
     {
