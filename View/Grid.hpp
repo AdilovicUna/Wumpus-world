@@ -62,7 +62,7 @@ public:
 
 	void drawGrid();
 	void selectSquare(const Point &p);
-	void addElement(const SDL_Keycode &key, const Point &p);
+	bool addElement(const SDL_Keycode &key, const Point &p);
 
 	// play button pressed
 	void play();

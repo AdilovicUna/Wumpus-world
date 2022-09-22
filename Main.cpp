@@ -4,41 +4,12 @@
 
 //NOTE: height = row, width = col
 
-void mouseEventHandler(SDL_Event event, Grid& grid, Interface& interface, Point cursorPos)
+enum class Action
 {
-    if (grid.playOn)
-        return;
-
-    if (interface.isHelpButtonClicked(cursorPos)) // check if we clicked help button
-        interface.openHelp();
-    else if (interface.isExitHelpButtonClicked(cursorPos)) // check if we clicked exit help button
-        interface.closeHelp();
-    else if (interface.isPlayButtonClicked(cursorPos)) // check if we clicked play button
-    {
-        grid.solver.solve();
-        grid.play();
-    }
-    else if (event.button.clicks == 2) // check if it was a double click
-        grid.selectSquare(cursorPos);
-}
-
-bool eventHandler(SDL_Event event, Grid& grid, Interface& interface)
-{
-    if (event.type == SDL_QUIT) // x clicked
-    {
-        return false;
-    }
-    else if (event.type == SDL_MOUSEBUTTONDOWN) // mouse click
-    {
-        mouseEventHandler(event, grid, interface, { event.button.x, event.button.y });
-    }
-    else if (event.type == SDL_KEYDOWN)
-    {
-        grid.addElement(event.key.keysym.sym, { event.button.x, event.button.y });
-    }
-
-    return true;
-}
+    draw,
+    quit,
+    none
+};
 
 void draw(Grid& grid, Interface& interface)
 {
@@ -52,6 +23,48 @@ void draw(Grid& grid, Interface& interface)
 
     if (grid.showOutcome)
         interface.drawOutcome(grid.outcome);
+}
+
+bool mouseEventHandler(SDL_Event event, Grid& grid, Interface& interface, Point cursorPos)
+{
+    if (grid.playOn)
+        return true;
+
+    if (interface.isHelpButtonClicked(cursorPos)) // check if we clicked help button
+        interface.openHelp();
+    else if (interface.isExitHelpButtonClicked(cursorPos)) // check if we clicked exit help button
+        interface.closeHelp();
+    else if (interface.isPlayButtonClicked(cursorPos)) // check if we clicked play button
+    {
+        grid.solver.solve();
+        grid.play();
+    }
+    else if (event.button.clicks == 2) // check if it was a double click
+        grid.selectSquare(cursorPos);
+    else
+        return false;
+
+    return true;
+}
+
+Action eventHandler(SDL_Event event, Grid& grid, Interface& interface, SDL_Renderer*& renderer)
+{
+    if (event.type == SDL_QUIT) // x clicked (exit)
+    {
+        return Action::quit;
+    }
+    else if (event.type == SDL_MOUSEBUTTONDOWN) // mouse click
+    {
+        if (mouseEventHandler(event, grid, interface, { event.button.x, event.button.y }))
+            return Action::draw;
+    }
+    else if (event.type == SDL_KEYUP)
+    {
+        if (grid.addElement(event.key.keysym.sym, { event.button.x, event.button.y }))
+            return Action::draw;
+    }
+
+    return Action::none;
 }
 
 std::string trim(std::string& str)
@@ -190,19 +203,30 @@ int main(int argc, char* argv[])
         unsigned int lastTime = 0;
         unsigned int currentTime = 0;
 
+        Action action;
+        bool start = true;
+
         // keep redrawing everything
         while (running)
         {
             while (SDL_PollEvent(&event) != 0)
             {
-                if (!eventHandler(event, grid, interface))
+                if ((action = eventHandler(event, grid, interface, renderer)) == Action::quit)
                     running = false;
             }
 
-            // clear
-            SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE); // set background color to black
-            SDL_RenderClear(renderer);
+            if (start) // we want to draw when the program is just starting
+            {
+                action = Action::draw;
+                start = false;
+            }
 
+            // clear
+            if (action == Action::draw)
+            {
+                SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE); // set background color to black
+                SDL_RenderClear(renderer);
+            }
 
             currentTime = SDL_GetTicks();
 
@@ -213,15 +237,17 @@ int main(int argc, char* argv[])
                 if (currentTime > lastTime + 1000) {
                     grid.playNext();
                     lastTime = currentTime;
+                    action = Action::draw;
                 }
             }
 
-            draw(grid, interface);
+            if (action == Action::draw)
+                draw(grid, interface);
 
             // show
             SDL_RenderPresent(renderer);
 
-            SDL_Delay(10);
+            SDL_Delay(100);
         }
 
         // clean

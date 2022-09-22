@@ -200,7 +200,7 @@ void Grid::selectSquare(const Point &p)
 	}
 }
 
-void Grid::addElement(const SDL_Keycode &key, const Point &p)
+bool Grid::addElement(const SDL_Keycode &key, const Point &p)
 {
 	Pos cell = getCell(selected);
 
@@ -220,6 +220,10 @@ void Grid::addElement(const SDL_Keycode &key, const Point &p)
 		else
 			solver.world.removePit(cell);
 	}
+	else
+		return false;
+
+	return true;
 }
 
 Pos Grid::getCell(const Point &p) const

@@ -1,1 +1,1 @@
-grid_size=3
+grid_size=4
